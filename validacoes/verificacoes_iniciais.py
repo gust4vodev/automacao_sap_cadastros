@@ -12,30 +12,26 @@ import servicos.api_google as google
 # --- Imports de Utilitários ---
 from uteis.cores import VERDE, VERMELHO, RESET
 
-
 def testar_conexoes_api():
+    """Verificação de conexão com as APIs."""
     """
-    Executa testes de chamada nas APIs externas para validar a conexão.
-    Imprime o resultado em verde (sucesso) ou vermelho (falha).
+    Executa testes de chamada nas APIs externas. Em caso de falha, imprime
+    um erro detalhado e levanta uma exceção para o motor assistente.
     """
-    # Emoji ⚙️ identifica que esta mensagem vem do módulo de validações.
-    print("\n⚙️  Verificando conexões com APIs externas...")
+    print("⚙️  Verificando conexões com APIs externas...")
 
-    # --- Teste 1: API CNPJá ---
     try:
-        cnpja.consultar_cnpj("04143008002705") # CNPJ de exemplo
-        print(f"    {VERDE}✔ API CNPJá: Conectada{RESET}")
+        # Tenta executar todas as verificações em sequência.
+        cnpja.consultar_cnpj("04143008002705")
+        google.consultar_coordenadas("Avenida Paulista, 1578, São Paulo, SP")
+
+        # Se chegou até aqui, todas as conexões foram bem-sucedidas.
+        print(f"    {VERDE}✔ Conexões com as APIs estabelecidas com sucesso.{RESET}")
 
     except Exception as e:
-        print(f"    {VERMELHO}✖ API CNPJá: Falha na conexão{RESET}")
-        print(f"    {VERMELHO}  -> Detalhe: {e}{RESET}")
+        # Se QUALQUER uma das chamadas acima falhar, o código pula para cá.
+        print(f"    {VERMELHO}✖ Falha na verificação das APIs.{RESET}")
+        print(f"    {VERMELHO}  -> Detalhe do erro: {e}{RESET}")
 
-    # --- Teste 2: API Google Geocode ---
-    try:
-        endereco_teste = "Avenida Paulista, 1578, São Paulo, SP"
-        google.consultar_coordenadas(endereco_teste)
-        print(f"    {VERDE}✔ API Google Geocode: Conectada{RESET}")
-
-    except Exception as e:
-        print(f"    {VERMELHO}✖ API Google Geocode: Falha na conexão{RESET}")
-        print(f"    {VERMELHO}  -> Detalhe: {e}{RESET}")
+        # Sinaliza a falha para o motor.
+        raise
