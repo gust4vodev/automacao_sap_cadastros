@@ -1,0 +1,14 @@
+# Para carregar variáveis de ambiente (.env)
+python-dotenv
+
+# Para fazer requisições a APIs
+requests==2.32.5
+
+# Para automação de interface, manipula mouse e teclado
+pyautogui==0.9.54
+
+# Para manipulação da área de transferência do windows
+pyperclip==1.11.0
+
+# Para manipulação de dados (se necessário para relatórios)
+pandas==2.2.2
