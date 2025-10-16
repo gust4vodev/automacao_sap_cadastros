@@ -19,6 +19,9 @@ API_KEY_GOOGLE = os.getenv("GOOGLE_GEOCODE_API_KEY")
 # Busca o valor da URL base da API do CNPJá.
 URL_CNPJA = os.getenv("CNPJA_API_URL")
 
+# --- Configuração de Imagens ---
+CONFIANCA_PADRAO_IMAGEM = float(os.getenv("DEFAULT_IMAGE_CONFIDENCE", 0.9))
+
 # --- Validação de Carga ---
 # Verifica se a constante API_KEY_GOOGLE está vazia ou nula.
 # Se estiver, significa que a variável não foi encontrada no .env,
