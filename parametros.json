@@ -19,11 +19,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass1_tipo_pn": {
-    "path": "imagens/ass1_tipo_pn.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "ass14_perm_entreg_parcial": {
     "path": "imagens/ass14_perm_entreg_parcial.png",
     "ajuste_x": "",
@@ -54,23 +49,8 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass4_data_inicio": {
-    "path": "imagens/ass4_data_inicio.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass6_enviar_revisao_financeiro": {
-    "path": "imagens/ass6_enviar_revisao_financeiro.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "ass18_cpf_id_fiscais": {
     "path": "imagens/ass18_cpf_id_fiscais.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "aba_condicoes_pgto": {
-    "path": "imagens/aba_condicoes_pgto.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -119,11 +99,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "aba_exe_pgto": {
-    "path": "imagens/aba_exe_pgto.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "ass23_id_endereco": {
     "path": "imagens/ass23_id_endereco.png",
     "ajuste_x": "",
@@ -131,16 +106,6 @@
   },
   "ass24_tipo_pessoa": {
     "path": "imagens/ass24_tipo_pessoa.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass3_tipo_envio": {
-    "path": "imagens/ass3_tipo_envio.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass5_uso_principal": {
-    "path": "imagens/ass5_uso_principal.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -166,11 +131,6 @@
   },
   "aba_enderecos": {
     "path": "imagens/aba_enderecos.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass2_moeda": {
-    "path": "imagens/ass2_moeda.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -211,6 +171,46 @@
   },
   "ass17_ie_id_fiscais": {
     "path": "imagens/ass17_ie_id_fiscais.png",
+    "ajuste_x": "350",
+    "ajuste_y": ""
+  },
+  "geral1_usoprincipal": {
+    "path": "imagens/geral1_usoprincipal.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral1_datainicio": {
+    "path": "imagens/geral1_datainicio.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral1_tipopn": {
+    "path": "imagens/geral1_tipopn.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral1_moeda": {
+    "path": "imagens/geral1_moeda.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "aba_exepgto": {
+    "path": "imagens/aba_exepgto.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "aba_condicoespgto": {
+    "path": "imagens/aba_condicoespgto.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral1_enviarrevisao": {
+    "path": "imagens/geral1_enviarrevisao.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral1_tipoenvio": {
+    "path": "imagens/geral1_tipoenvio.png",
     "ajuste_x": "",
     "ajuste_y": ""
   }

@@ -14,8 +14,7 @@ from configuracoes.carregar_config import CONFIANCA_PADRAO_IMAGEM
 
 # --- Constantes de Caminho ---
 CAMINHO_PROJETO = Path(__file__).resolve().parent.parent
-CAMINHO_JSON = CAMINHO_PROJETO / "assets" / "parametros.json"
-
+CAMINHO_JSON = CAMINHO_PROJETO / "parametros.json"
 
 def localizar_elemento(
     nome_chave: str,
