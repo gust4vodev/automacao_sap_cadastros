@@ -1,6 +1,6 @@
-# funcoes/digitar_texto.py
+# funcoes/clicar_elemento.py
 
-"""Módulo para a ação de digitar texto com lógica de ajuste inteligente."""
+"""Módulo para a ação de clicar em um elemento com lógica de ajuste inteligente."""
 
 import pyautogui
 import time
@@ -9,15 +9,14 @@ import time
 from .localizar_elemento import localizar_elemento
 
 
-def digitar_texto(
+def clicar_elemento(
     nome_chave: str,
-    texto_a_digitar: str,
     ajuste_x_override: int = None,
     ajuste_y_override: int = None
 ):
-    """Digita um texto em um campo, usando uma âncora e lógica de ajuste.
+    """Clica em um elemento, aplicando uma lógica de ajuste flexível.
 
-    A função primeiro localiza a âncora e então decide qual ajuste
+    A função primeiro localiza a âncora. Em seguida, decide qual ajuste
     usar, com a seguinte prioridade:
     1. O ajuste de override passado diretamente para a função.
     2. O ajuste padrão definido no arquivo parametros.json.
@@ -25,7 +24,6 @@ def digitar_texto(
 
     Args:
         nome_chave (str): A chave do elemento no JSON a ser usado como âncora.
-        texto_a_digitar (str): O texto que será digitado no campo.
         ajuste_x_override (int, optional): Um deslocamento X que sobrescreve
                                            qualquer valor do JSON.
         ajuste_y_override (int, optional): Um deslocamento Y que sobrescreve
@@ -33,7 +31,7 @@ def digitar_texto(
 
     Raises:
         Exception: Levanta qualquer exceção vinda da localização do elemento
-                   ou da própria ação de digitação.
+                   ou da própria ação de clique, para ser capturada pelo motor.
     """
     # 1. Encontra a âncora e seus dados. Se falhar, levanta uma exceção.
     posicao_ancora, dados_elemento = localizar_elemento(nome_chave)
@@ -42,6 +40,7 @@ def digitar_texto(
     if ajuste_x_override is not None:
         ajuste_x_final = ajuste_x_override
     else:
+        # Tenta pegar o valor do JSON, convertendo para int. Usa 0 se estiver vazio ou ausente.
         ajuste_x_final = int(dados_elemento.get("ajuste_x") or 0)
 
     # 3. Lógica inteligente para decidir o ajuste final em Y.
@@ -57,32 +56,28 @@ def digitar_texto(
     # 5. Tenta executar a ação no alvo final.
     try:
         pyautogui.click(x_alvo, y_alvo)
-        time.sleep(0.5)
-        pyautogui.write(str(texto_a_digitar), interval=0.05)
-        time.sleep(0.5)
-        pyautogui.press('tab') # Pressiona Tab para confirmar a entrada.
     except Exception as e:
-        raise RuntimeError(f"Falha ao tentar digitar no elemento '{nome_chave}': {e}")
+        raise RuntimeError(f"Falha ao tentar clicar no elemento '{nome_chave}': {e}")
 
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':
     """
-    Bloco para testar a função 'digitar_texto' de forma isolada.
-    Execute-o a partir da raiz do projeto com: python -m funcoes.digitar_texto
+    Bloco para testar a função 'clicar_elemento' de forma isolada.
+    Execute-o a partir da raiz do projeto com: python -m funcoes.clicar_elemento
     """
-    print(">>> Iniciando teste da função 'digitar_texto'...")
-    print(">>> Deixe a imagem âncora ('ass17_ie_id_fiscais') visível na tela.")
+    print(">>> Iniciando teste da função 'clicar_elemento'...")
+    print(">>> Deixe a imagem alvo visível na tela.")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
-        # --- Teste com os dados fornecidos ---
-        chave_teste = "ass17_ie_id_fiscais"
-        valor_teste = "0123456789"
+        # --- Exemplo de Teste ---
+        # Altere a chave abaixo para uma que exista no seu parametros.json
+        chave_teste = "aba_caracteristicas" # Mude para a chave real
 
-        print(f"--- Tentando digitar '{valor_teste}' no campo relativo a '{chave_teste}'...")
-        digitar_texto(chave_teste, valor_teste)
+        print(f"--- Tentando clicar no elemento '{chave_teste}'...")
+        clicar_elemento(chave_teste)
         print("--- Teste concluído com SUCESSO!")
 
     except Exception as e:

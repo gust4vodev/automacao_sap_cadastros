@@ -1,6 +1,6 @@
-# funcoes/digitar_texto.py
+# funcoes/selecionar_dropdown.py
 
-"""Módulo para a ação de digitar texto com lógica de ajuste inteligente."""
+"""Módulo para a ação de selecionar um valor em um dropdown."""
 
 import pyautogui
 import time
@@ -9,13 +9,13 @@ import time
 from .localizar_elemento import localizar_elemento
 
 
-def digitar_texto(
+def selecionar_dropdown(
     nome_chave: str,
-    texto_a_digitar: str,
+    valor_a_selecionar: str,
     ajuste_x_override: int = None,
     ajuste_y_override: int = None
 ):
-    """Digita um texto em um campo, usando uma âncora e lógica de ajuste.
+    """Seleciona um valor em um dropdown, usando uma âncora e lógica de ajuste.
 
     A função primeiro localiza a âncora e então decide qual ajuste
     usar, com a seguinte prioridade:
@@ -25,7 +25,7 @@ def digitar_texto(
 
     Args:
         nome_chave (str): A chave do elemento no JSON a ser usado como âncora.
-        texto_a_digitar (str): O texto que será digitado no campo.
+        valor_a_selecionar (str): O texto que será digitado para selecionar a opção.
         ajuste_x_override (int, optional): Um deslocamento X que sobrescreve
                                            qualquer valor do JSON.
         ajuste_y_override (int, optional): Um deslocamento Y que sobrescreve
@@ -33,7 +33,7 @@ def digitar_texto(
 
     Raises:
         Exception: Levanta qualquer exceção vinda da localização do elemento
-                   ou da própria ação de digitação.
+                   ou da interação com o dropdown.
     """
     # 1. Encontra a âncora e seus dados. Se falhar, levanta uma exceção.
     posicao_ancora, dados_elemento = localizar_elemento(nome_chave)
@@ -50,39 +50,39 @@ def digitar_texto(
     else:
         ajuste_y_final = int(dados_elemento.get("ajuste_y") or 0)
 
-    # 4. Calcula a posição final do alvo.
+    # 4. Calcula a posição final do alvo (o clique para abrir o dropdown).
     x_alvo = posicao_ancora.x + ajuste_x_final
     y_alvo = posicao_ancora.y + ajuste_y_final
 
-    # 5. Tenta executar a ação no alvo final.
+    # 5. Tenta executar a sequência de ações no alvo final.
     try:
         pyautogui.click(x_alvo, y_alvo)
+        time.sleep(0.8) # Pausa um pouco maior para o dropdown abrir.
+        pyautogui.write(str(valor_a_selecionar), interval=0.05)
         time.sleep(0.5)
-        pyautogui.write(str(texto_a_digitar), interval=0.05)
-        time.sleep(0.5)
-        pyautogui.press('tab') # Pressiona Tab para confirmar a entrada.
+        pyautogui.press('enter') # Enter para confirmar a seleção.
     except Exception as e:
-        raise RuntimeError(f"Falha ao tentar digitar no elemento '{nome_chave}': {e}")
+        raise RuntimeError(f"Falha ao interagir com o dropdown '{nome_chave}': {e}")
 
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':
     """
-    Bloco para testar a função 'digitar_texto' de forma isolada.
-    Execute-o a partir da raiz do projeto com: python -m funcoes.digitar_texto
+    Bloco para testar a função 'selecionar_dropdown' de forma isolada.
+    Execute-o a partir da raiz do projeto com: python -m funcoes.selecionar_dropdown
     """
-    print(">>> Iniciando teste da função 'digitar_texto'...")
-    print(">>> Deixe a imagem âncora ('ass17_ie_id_fiscais') visível na tela.")
+    print(">>> Iniciando teste da função 'selecionar_dropdown'...")
+    print(">>> Deixe a imagem âncora ('ass1_tipo_pn') visível na tela.")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
         # --- Teste com os dados fornecidos ---
-        chave_teste = "ass17_ie_id_fiscais"
-        valor_teste = "0123456789"
+        chave_teste = "ass1_tipo_pn"
+        valor_teste = "Cliente"
 
-        print(f"--- Tentando digitar '{valor_teste}' no campo relativo a '{chave_teste}'...")
-        digitar_texto(chave_teste, valor_teste)
+        print(f"--- Tentando selecionar '{valor_teste}' no dropdown '{chave_teste}'...")
+        selecionar_dropdown(chave_teste, valor_teste)
         print("--- Teste concluído com SUCESSO!")
 
     except Exception as e:

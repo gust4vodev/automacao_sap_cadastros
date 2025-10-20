@@ -1,14 +1,31 @@
-# Para carregar variáveis de ambiente (.env)
-python-dotenv
+# -----------------------------
+# Bibliotecas para Automação de Interface Gráfica (GUI)
+# -----------------------------
 
-# Para fazer requisições a APIs
-requests==2.32.5
+# Usada pelo PyAutoGUI para reconhecimento de imagem avançado (o argumento 'confidence').
+opencv-python==4.12.0.88
 
-# Para automação de interface, manipula mouse e teclado
+# Usada para manipulação e análise de dados, útil para criar relatórios a partir de planilhas ou outras fontes.
+pandas==2.2.2
+
+# A biblioteca principal da automação; controla o mouse e o teclado para simular as ações de um usuário.
 pyautogui==0.9.54
 
-# Para manipulação da área de transferência do windows
+# Permite copiar e colar textos para a área de transferência do sistema (o famoso Ctrl+C / Ctrl+V).
 pyperclip==1.11.0
 
-# Para manipulação de dados (se necessário para relatórios)
-pandas==2.2.2
+
+# -----------------------------
+# Biblioteca para Configuração do Ambiente
+# -----------------------------
+
+# Lê as variáveis (como chaves de API) do arquivo .env e as torna acessíveis para o Python.
+python-dotenv==1.1.1
+
+
+# -----------------------------
+# Biblioteca para Comunicação com a Internet
+# -----------------------------
+
+# Facilita a comunicação com APIs externas, como as do CNPJá e do Google Geocode, para enviar e receber dados.
+requests==2.32.5
