@@ -9,8 +9,11 @@ from configuracoes import carregar_config
 from validacoes.verificacoes_iniciais import executar_verificacoes_iniciais
 from assistente.executor import executar_acao_assistida
 from assistente.excecoes import AutomacaoAbortadaPeloUsuario
-from acoes.preencher_aba_geral1 import processar_aba_geral_parte1
 from uteis.cores import AMARELO, VERMELHO, RESET
+
+# --- Imports das "Paredes" de Ações ---
+from acoes.preencher_aba_geral1 import processar_aba_geral_parte1
+from acoes.preencher_aba_caracteristicas import preencher_aba_caracteristicas
 
 
 def principal():
@@ -19,22 +22,23 @@ def principal():
     print(f"{AMARELO}🚀 Automação SAP B1 iniciada...{RESET}\n")
 
     try:
-        # Antes de qualquer coisa, testa todas as dependencias externas
+        # ETAPA 1: Verificações iniciais do ambiente.
         executar_acao_assistida(executar_verificacoes_iniciais)
 
-        # ABA GERAL 1/2
-        print(f"\n--- Iniciando Etapa: Preenchimento da Aba Geral (1/2) ---")
+        # ETAPA 2: Preenchimento da Aba Geral (Parte 1)
+        print(f"\n{AMARELO}--- Iniciando Etapa: Aba Geral (Parte 1) ---{RESET}")
         executar_acao_assistida(processar_aba_geral_parte1)
 
-        # ABA CARACTERISTICAS
-        print(f"\n--- Iniciando Etapa: Preenchimento da Aba Caracteristicas ---")
-        executar_acao_assistida(processar_aba_geral_parte1)
+        # ETAPA 3: Preenchimento da Aba Características ---
+        print(f"\n{AMARELO}--- Iniciando Etapa: Aba Características ---{RESET}")
+        executar_acao_assistida(preencher_aba_caracteristicas)
+        # --------------------------------------------------------
+
+        # Futuramente, as próximas "paredes" (outras abas) serão chamadas aqui.
 
 
-    
     except AutomacaoAbortadaPeloUsuario:
-        # Se o usuário abortar, o motor levanta uma exceção que é
-        # capturada aqui para encerrar o programa de forma limpa.
+        # Se o usuário abortar em qualquer etapa, a execução é encerrada aqui.
         print(f"{VERMELHO}🚀 Automação encerrada pelo usuário.{RESET}")
         return # Encerra a função principal.
 
