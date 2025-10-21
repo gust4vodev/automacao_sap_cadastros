@@ -44,11 +44,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass7_flag_pet7": {
-    "path": "imagens/ass7_flag_pet7.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "ass18_cpf_id_fiscais": {
     "path": "imagens/ass18_cpf_id_fiscais.png",
     "ajuste_x": "",
@@ -91,11 +86,6 @@
   },
   "ass32_id_socio": {
     "path": "imagens/ass32_id_socio.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass7_flag_serilon": {
-    "path": "imagens/ass7_flag_serilon.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -211,6 +201,21 @@
   },
   "geral1_tipoenvio": {
     "path": "imagens/geral1_tipoenvio.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "caracteristicas_logmodif": {
+    "path": "imagens/caracteristicas_logmodif.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "caracteristicas_pet7": {
+    "path": "imagens/caracteristicas_pet7.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "caracteristicas_serilon": {
+    "path": "imagens/caracteristicas_serilon.png",
     "ajuste_x": "",
     "ajuste_y": ""
   }
