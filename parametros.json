@@ -9,16 +9,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass13_fechar_exe_pgto": {
-    "path": "imagens/ass13_fechar_exe_pgto.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass14_perm_entreg_parcial": {
-    "path": "imagens/ass14_perm_entreg_parcial.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "ass30_celular": {
     "path": "imagens/ass30_celular.png",
     "ajuste_x": "",
@@ -44,11 +34,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass8_abrir_exe_pgto": {
-    "path": "imagens/ass8_abrir_exe_pgto.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "ass26_indicador_ie": {
     "path": "imagens/ass26_indicador_ie.png",
     "ajuste_x": "",
@@ -61,11 +46,6 @@
   },
   "ass27_op_consumidor": {
     "path": "imagens/ass27_op_consumidor.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass11_cred_exe_pgto_novo": {
-    "path": "imagens/ass11_cred_exe_pgto_novo.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -227,6 +207,11 @@
   "exepgto_fecharformas": {
     "path": "imagens/exepgto_fecharformas.png",
     "ajuste_x": "850",
+    "ajuste_y": ""
+  },
+  "condicoespgto_entregparcial": {
+    "path": "imagens/condicoespgto_entregparcial.png",
+    "ajuste_x": "",
     "ajuste_y": ""
   }
 }

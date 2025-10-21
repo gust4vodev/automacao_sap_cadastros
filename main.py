@@ -14,8 +14,8 @@ from uteis.cores import AMARELO, VERMELHO, RESET
 # --- Imports das "Paredes" de Ações ---
 from acoes.preencher_aba_geral1 import processar_aba_geral_parte1
 from acoes.preencher_aba_caracteristicas import preencher_aba_caracteristicas
-# NOVO IMPORT: Importa a nossa terceira "parede".
 from acoes.preencher_aba_exepgto import preencher_aba_exepgto
+from acoes.preencher_aba_condicoespgto import preencher_aba_condicoespgto
 
 
 def principal():
@@ -35,10 +35,14 @@ def principal():
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Características ---{RESET}")
         executar_acao_assistida(preencher_aba_caracteristicas)
 
-        # --- NOVA ETAPA 4: Preenchimento da Aba Execução de Pagamentos ---
+        # ETAPA 4: Preenchimento da Aba Execução de Pagamentos
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Execução de Pagamentos ---{RESET}")
         executar_acao_assistida(preencher_aba_exepgto)
-        # -------------------------------------------------------------
+
+        # --- NOVA ETAPA 5: Preenchimento da Aba Condições de Pagamento ---
+        print(f"\n{AMARELO}--- Iniciando Etapa: Aba Condições de Pagamento ---{RESET}")
+        executar_acao_assistida(preencher_aba_condicoespgto)
+        # -----------------------------------------------------------------
 
         # Futuramente, as próximas "paredes" (outras abas) serão chamadas aqui.
 
