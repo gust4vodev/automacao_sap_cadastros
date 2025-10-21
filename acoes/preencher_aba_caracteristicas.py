@@ -31,7 +31,7 @@ def preencher_aba_caracteristicas():
 
     # 3. Copia tabela do log de modificações para a área de transferência e fecha janela do log.
     executar_acao_assistida(lambda: clicar_com_botao_direito("caracteristicas_logmodif", ajuste_x_override=-50, ajuste_y_override=30), nome_acao="Clicar com botão direito no log para copiar")
-    time.sleep(1)
+    time.sleep(2)
     executar_acao_assistida(lambda: pressionar_tecla_unica('t'), nome_acao="Pressionar tecla 'T' para Copiar Tudo")
     time.sleep(1)
     executar_acao_assistida(lambda: pressionar_tecla_unica('esc'), nome_acao="Pressionar tecla 'Esc' para Fechar o Log")
