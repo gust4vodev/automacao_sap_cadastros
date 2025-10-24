@@ -6,7 +6,7 @@ import requests
 from typing import Tuple
 
 # Import absoluto para carregar a chave da API do nosso módulo de configurações.
-from configuracoes.carregar_config import API_KEY_GOOGLE
+from configuracoes.carregar_config import GOOGLE_GEOCODE_API_KEY
 
 def consultar_coordenadas(endereco: str) -> Tuple[float, float]:
     """
@@ -30,7 +30,7 @@ def consultar_coordenadas(endereco: str) -> Tuple[float, float]:
     # 2. Dicionário com os parâmetros que serão enviados na URL.
     params = {
         'address': endereco,
-        'key': API_KEY_GOOGLE
+        'key': GOOGLE_GEOCODE_API_KEY
     }
 
     try:

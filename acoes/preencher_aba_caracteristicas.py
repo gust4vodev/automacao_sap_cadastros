@@ -49,6 +49,8 @@ def preencher_aba_caracteristicas():
     else: # Usuário é SERILON (ou outro), clica em Y.
         executar_acao_assistida(lambda: clicar_elemento("caracteristicas_serilon"),nome_acao=f"Definir divisão como SERILON (Usuário: {ultimo_usuario})")
     time.sleep(0.5)
+    return codigo_divisao
+
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':

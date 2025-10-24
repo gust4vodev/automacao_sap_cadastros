@@ -6,7 +6,7 @@ do ambiente antes do início da automação principal.
 """
 
 # --- Imports de Módulos do Projeto ---
-import servicos.api_cnpja as cnpja
+import servicos.api_cnpja_publica as cnpja_publica
 import servicos.api_google as google
 from uteis.sincronizador_assets import sincronizar_json_com_pasta_assets
 from uteis.cores import VERDE, VERMELHO, RESET
@@ -29,7 +29,7 @@ def executar_verificacoes_iniciais():
         sincronizar_json_com_pasta_assets()
 
         # ETAPA 2: Verifica a conexão com as APIs externas.
-        cnpja.consultar_cnpj("04143008002705")
+        #cnpja_publica.consultar_cnpj("04143008002705")
         google.consultar_coordenadas("Avenida Paulista, 1578, São Paulo, SP")
 
         # Se chegou até aqui, todas as verificações passaram.

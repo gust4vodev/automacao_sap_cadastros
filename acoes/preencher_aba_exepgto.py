@@ -13,7 +13,7 @@ from funcoes.rolar_mouse import rolar_mouse_linhas
 from assistente.executor import executar_acao_assistida
 
 
-def preencher_aba_exepgto():
+def preencher_aba_exepgto(divisao_pn: int):
     """(Orquestradora) Executa o fluxo completo para a Aba Execução de Pagamentos.
 
     Cada passo é executado individualmente pelo motor.
@@ -30,9 +30,10 @@ def preencher_aba_exepgto():
     executar_acao_assistida(lambda: clicar_elemento("exepgto_bonif"), nome_acao="Selecionar forma de pgto 'Bonificação'")
     time.sleep(0.5)
 
-    # 4. Clicar nas formas de pgto 'Crédito'.
-    executar_acao_assistida(lambda: clicar_elemento("exepgto_cred"), nome_acao="Selecionar forma de pgto 'Crédito'")
-    time.sleep(0.5)
+    if divisao_pn != 4:
+        # 4. Clicar nas formas de pgto 'Crédito'.
+        executar_acao_assistida(lambda: clicar_elemento("exepgto_cred"), nome_acao="Selecionar forma de pgto 'Crédito'")
+        time.sleep(0.5)
 
     # 5. Clicar na forma de pgto 'Depósito'.
     executar_acao_assistida(lambda: clicar_elemento("exepgto_deposito"), nome_acao="Selecionar forma de pgto 'Depósito'")
