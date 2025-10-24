@@ -14,21 +14,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass15_id_fiscais": {
-    "path": "imagens/ass15_id_fiscais.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass20_atualiza_id_fiscais": {
-    "path": "imagens/ass20_atualiza_id_fiscais.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass18_cpf_id_fiscais": {
-    "path": "imagens/ass18_cpf_id_fiscais.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "ass25_data_abertura": {
     "path": "imagens/ass25_data_abertura.png",
     "ajuste_x": "",
@@ -74,16 +59,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass16_cnpj_id_fiscais": {
-    "path": "imagens/ass16_cnpj_id_fiscais.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass21_ok_id_fiscais": {
-    "path": "imagens/ass21_ok_id_fiscais.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "aba_enderecos": {
     "path": "imagens/aba_enderecos.png",
     "ajuste_x": "",
@@ -117,11 +92,6 @@
   "ass19_cpf_suframa_fiscais": {
     "path": "imagens/ass19_cpf_suframa_fiscais.png",
     "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass17_ie_id_fiscais": {
-    "path": "imagens/ass17_ie_id_fiscais.png",
-    "ajuste_x": "350",
     "ajuste_y": ""
   },
   "geral1_usoprincipal": {
@@ -206,12 +176,42 @@
   },
   "exepgto_fecharformas": {
     "path": "imagens/exepgto_fecharformas.png",
-    "ajuste_x": "850",
+    "ajuste_x": "855",
     "ajuste_y": ""
   },
   "condicoespgto_entregparcial": {
     "path": "imagens/condicoespgto_entregparcial.png",
     "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "enderecos_idfiscais": {
+    "path": "imagens/enderecos_idfiscais.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "endereco_idfiscais_ie": {
+    "path": "imagens/endereco_idfiscais_ie.png",
+    "ajuste_x": "400",
+    "ajuste_y": ""
+  },
+  "endereco_idfiscais_cnpj": {
+    "path": "imagens/endereco_idfiscais_cnpj.png",
+    "ajuste_x": "400",
+    "ajuste_y": ""
+  },
+  "endereco_idfiscais_ok": {
+    "path": "imagens/endereco_idfiscais_ok.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "endereco_idfiscais_atualizar": {
+    "path": "imagens/endereco_idfiscais_atualizar.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "endereco_idfiscais_cpf": {
+    "path": "imagens/endereco_idfiscais_cpf.png",
+    "ajuste_x": "400",
     "ajuste_y": ""
   }
 }

@@ -19,6 +19,7 @@ def preencher_aba_condicoespgto():
     """
     # Passo 1: Navegar para a aba.
     # CORREÇÃO: Usar a chave correta 'aba_condicoespgto'
+    time.sleep(1)
     executar_acao_assistida(
         lambda: ir_para_aba("condicoespgto"),
         nome_acao="Navegar para a Aba Condições de Pagamento"

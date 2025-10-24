@@ -5,7 +5,7 @@ Ponto de entrada principal da aplicação de automação SAP B1.
 """
 
 # --- Imports ---
-from configuracoes import carregar_config
+import configuracoes.carregar_config
 from validacoes.verificacoes_iniciais import executar_verificacoes_iniciais
 from assistente.executor import executar_acao_assistida
 from assistente.excecoes import AutomacaoAbortadaPeloUsuario
@@ -16,6 +16,7 @@ from acoes.preencher_aba_geral1 import processar_aba_geral_parte1
 from acoes.preencher_aba_caracteristicas import preencher_aba_caracteristicas
 from acoes.preencher_aba_exepgto import preencher_aba_exepgto
 from acoes.preencher_aba_condicoespgto import preencher_aba_condicoespgto
+from acoes.preencher_aba_enderecos_idfiscais import preencher_aba_enderecos_idfiscais
 
 
 def principal():
@@ -33,16 +34,21 @@ def principal():
 
         # ETAPA 3: Preenchimento da Aba Características
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Características ---{RESET}")
-        executar_acao_assistida(preencher_aba_caracteristicas)
+        divisao_pn = executar_acao_assistida(preencher_aba_caracteristicas)
+        print(f"divisao_pn: {divisao_pn}")
 
         # ETAPA 4: Preenchimento da Aba Execução de Pagamentos
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Execução de Pagamentos ---{RESET}")
-        executar_acao_assistida(preencher_aba_exepgto)
+        executar_acao_assistida(lambda: preencher_aba_exepgto(divisao_pn), nome_acao="Preencher Aba Execução de Pagamentos")
 
-        # --- NOVA ETAPA 5: Preenchimento da Aba Condições de Pagamento ---
+        # ETAPA 5: Preenchimento da Aba Condições de Pagamento
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Condições de Pagamento ---{RESET}")
         executar_acao_assistida(preencher_aba_condicoespgto)
-        # -----------------------------------------------------------------
+
+        # --- NOVA ETAPA 6: Preenchimento dos IDs Fiscais na Aba Endereços ---
+        print(f"\n{AMARELO}--- Iniciando Etapa: Aba Endereços - IDs Fiscais ---{RESET}")
+        executar_acao_assistida(preencher_aba_enderecos_idfiscais)
+        # -------------------------------------------------------------------
 
         # Futuramente, as próximas "paredes" (outras abas) serão chamadas aqui.
 
