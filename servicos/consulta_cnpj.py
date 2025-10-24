@@ -23,7 +23,6 @@ from uteis.extrator_json import extrair_dado_json
 _ultimo_cnpj_consultado: str = None
 _ultimo_resultado: Dict[str, Any] = None
 
-
 # ============================================================
 # 🔧 Funções Auxiliares
 # ============================================================
@@ -71,7 +70,8 @@ def obter_dados_cnpj(cnpj: str) -> Dict[str, Any]:
         "data_abertura": "",
         "inscricao_estadual": "Isento",
         "simples_nacional": None,
-        "suframa": None,
+        "suframa_valido": False,
+        "suframa_numero": "",
         "socios": [],
         "endereco": {
             "tipo_logradouro": "",
@@ -81,8 +81,8 @@ def obter_dados_cnpj(cnpj: str) -> Dict[str, Any]:
             "bairro": "",
             "cep": "",
             "cidade": "",
-            "estado": "",
-        },
+            "estado": ""
+        }
     }
 
     # ============================================================
@@ -92,6 +92,12 @@ def obter_dados_cnpj(cnpj: str) -> Dict[str, Any]:
     if API_CNPJ_SELECIONADA == 1:  # CNPJá Pública
         try:
             dados_gerais_brutos = consultar_cnpj_publica(cnpj_chave)
+        except Exception as e:
+                print(f"⚠️ Aviso: Falha ao obter dados gerais da API principal (CNPJá Pública): {e}")
+                # --- ADICIONAR ESTA LINHA ---
+                # Re-levanta a exceção para sinalizar a falha ao motor executor
+                raise e
+        try:
             # Mapeamento principal
             dados_padronizados["razao_social"] = extrair_dado_json(dados_gerais_brutos, "company.name")
             dados_padronizados["data_abertura"] = extrair_dado_json(dados_gerais_brutos, "founded")
@@ -120,15 +126,35 @@ def obter_dados_cnpj(cnpj: str) -> Dict[str, Any]:
             print(f"⚠️ Aviso: Falha ao obter dados gerais da API principal (CNPJá Pública): {e}")
 
     # ============================================================
-    # 🧾 Etapa 2 — Inscrição Estadual
+    # 🔎 Etapa 2 — Suframa
+    # ============================================================
+    try:
+        suframa_lista = extrair_dado_json(dados_gerais_brutos, "suframa", padrao=[])
+        if suframa_lista: # Procede somente se a lista não for vazia
+            primeiro_suframa = suframa_lista[0] # Pega o primeiro registro
+            suframa_aprovado = extrair_dado_json(primeiro_suframa, "approved", padrao=False)
+            suframa_numero = extrair_dado_json(primeiro_suframa, "number", padrao="")
+            if suframa_aprovado and suframa_numero:
+                dados_padronizados["suframa_valido"] = True
+                dados_padronizados["suframa_numero"] = suframa_numero
+        else:
+            dados_padronizados["suframa_valido"] = False
+            dados_padronizados["suframa_numero"] = ""
+
+    except Exception as e:
+        # Em caso de erro inesperado ao processar Suframa
+        print(f"⚠️ Aviso: Falha ao processar dados de Suframa: {e}")
+        dados_padronizados["suframa_valido"] = False
+        dados_padronizados["suframa_numero"] = ""
+
+    # ============================================================
+    # 🧩 Etapa 3 — Inscrição Estadual
     # ============================================================
     try:
         dados_ie_brutos = consultar_ie_por_cnpj(cnpj_chave)
         estado_empresa = dados_padronizados["endereco"]["estado"]
         inscricao_estadual_valida = "Isento"
-
         registrations: List[Dict] = extrair_dado_json(dados_ie_brutos, "registrations", padrao=[])
-
         if estado_empresa:
             print(f"   - Validando {len(registrations)} IE(s) encontradas para o estado {estado_empresa}...")
             for registro in registrations:
@@ -154,6 +180,7 @@ def obter_dados_cnpj(cnpj: str) -> Dict[str, Any]:
 
     except Exception as e:
         print(f"⚠️ Aviso: falha ao consultar inscrição estadual: {e}")
+
 
     # ============================================================
     # 🕒 Finalização

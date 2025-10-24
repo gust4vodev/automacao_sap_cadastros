@@ -10,7 +10,6 @@ from validacoes.verificacoes_iniciais import executar_verificacoes_iniciais
 from assistente.executor import executar_acao_assistida
 from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 from uteis.cores import AMARELO, VERMELHO, RESET
-
 # --- Imports das "Paredes" de Ações ---
 from acoes.preencher_aba_geral1 import processar_aba_geral_parte1
 from acoes.preencher_aba_caracteristicas import preencher_aba_caracteristicas
@@ -26,6 +25,7 @@ def principal():
 
     try:
         # ETAPA 1: Verificações iniciais do ambiente.
+        print("⚙️  Executando verificações iniciais do ambiente...")
         executar_acao_assistida(executar_verificacoes_iniciais)
 
         # ETAPA 2: Preenchimento da Aba Geral (Parte 1)
@@ -47,8 +47,9 @@ def principal():
 
         # --- NOVA ETAPA 6: Preenchimento dos IDs Fiscais na Aba Endereços ---
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Endereços - IDs Fiscais ---{RESET}")
-        executar_acao_assistida(preencher_aba_enderecos_idfiscais)
-        # -------------------------------------------------------------------
+        doc_caract = executar_acao_assistida(preencher_aba_enderecos_idfiscais)
+       
+
 
         # Futuramente, as próximas "paredes" (outras abas) serão chamadas aqui.
 

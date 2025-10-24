@@ -64,11 +64,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass0_tela_inicial": {
-    "path": "imagens/ass0_tela_inicial.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "aba_socio": {
     "path": "imagens/aba_socio.png",
     "ajuste_x": "",
@@ -86,11 +81,6 @@
   },
   "ass33_novo_socio": {
     "path": "imagens/ass33_novo_socio.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass19_cpf_suframa_fiscais": {
-    "path": "imagens/ass19_cpf_suframa_fiscais.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -189,29 +179,39 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "endereco_idfiscais_ie": {
-    "path": "imagens/endereco_idfiscais_ie.png",
+  "enderecos_idfiscais_ie": {
+    "path": "imagens/enderecos_idfiscais_ie.png",
     "ajuste_x": "400",
     "ajuste_y": ""
   },
   "endereco_idfiscais_cnpj": {
-    "path": "imagens/endereco_idfiscais_cnpj.png",
+    "path": "imagens/enderecos_idfiscais_cnpj.png",
     "ajuste_x": "400",
     "ajuste_y": ""
   },
-  "endereco_idfiscais_ok": {
-    "path": "imagens/endereco_idfiscais_ok.png",
+  "enderecos_idfiscais_ok": {
+    "path": "imagens/enderecos_idfiscais_ok.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "endereco_idfiscais_atualizar": {
-    "path": "imagens/endereco_idfiscais_atualizar.png",
+  "enderecos_idfiscais_atualizar": {
+    "path": "imagens/enderecos_idfiscais_atualizar.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "endereco_idfiscais_cpf": {
-    "path": "imagens/endereco_idfiscais_cpf.png",
+  "enderecos_idfiscais_cpf": {
+    "path": "imagens/enderecos_idfiscais_cpf.png",
     "ajuste_x": "400",
+    "ajuste_y": ""
+  },
+  "enderecos_idfiscais_suframa": {
+    "path": "imagens/enderecos_idfiscais_suframa.png",
+    "ajuste_x": "400",
+    "ajuste_y": ""
+  },
+  "tela_cadastro_parceirodeneg": {
+    "path": "imagens/tela_cadastro_parceirodeneg.png",
+    "ajuste_x": "",
     "ajuste_y": ""
   }
 }

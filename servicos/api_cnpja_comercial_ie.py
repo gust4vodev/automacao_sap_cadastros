@@ -13,7 +13,6 @@ from configuracoes.carregar_config import CNPJA_API_KEY_COMERCIAL, CNPJA_API_URL
 # --- Constantes ---
 HEADERS = {"Authorization": CNPJA_API_KEY_COMERCIAL}
 TIMEOUT_REQUISICAO = 15 # Timeout em segundos
-print(f'key: {CNPJA_API_KEY_COMERCIAL}')
 
 def consultar_ie_por_cnpj(cnpj: str, estado: str = "BR") -> Dict[str, Any]:
     """
