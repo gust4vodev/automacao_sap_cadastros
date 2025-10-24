@@ -5,8 +5,7 @@ Módulo para a "parede" de ações: preenchimento dos IDs Fiscais na Aba Endere�
 """
 
 import time
-
-# --- Imports de Módulos do Projeto ---
+# --- Imports ---
 from navegacao.navegacao_abas import ir_para_aba
 from funcoes.clicar_elemento import clicar_elemento
 from funcoes.digitar_texto import digitar_texto
@@ -14,10 +13,12 @@ from uteis.formatadores import limpar_documento
 from uteis.extrator_documento_tela import obter_documento_tela_com_fallback
 from servicos.consulta_cnpj import obter_dados_cnpj
 from assistente.executor import executar_acao_assistida
+from uteis.cores import AMARELO, VERMELHO, RESET
+from uteis.extrator_json import extrair_dado_json # Import necessário para Suframa
 
 
-def preencher_aba_enderecos_idfiscais():
-    """(Orquestradora) Executa o fluxo para IDs Fiscais na Aba Endereços."""
+def preencher_aba_enderecos_idfiscais() -> int:
+    """(Orquestradora) Executa o fluxo para IDs Fiscais e retorna o tipo de doc."""
     # ============================================================
     # Passo 1: Navegar para Aba Endereços
     # ============================================================
@@ -31,44 +32,70 @@ def preencher_aba_enderecos_idfiscais():
     time.sleep(1)
 
     # ============================================================
-    # Passo 3: Obter Documento
+    # Passo 3: Obter e Validar Documento (com Loop e Correção Manual)
     # ============================================================
-    try:
-        documento_copiado = obter_documento_tela_com_fallback()
-    except Exception as e:
-        raise RuntimeError(f"Falha crítica ao obter documento da tela: {e}")
-    documento_limpo = limpar_documento(documento_copiado)
-    time.sleep(1)
+    documento_limpo = ""
+    tipo_pessoa = 0 # 0 = Desconhecido/Inválido, 1 = CPF, 2 = CNPJ
+    while True:
+        documento_copiado = obter_documento_tela_com_fallback() #AQUIII
+        documento_limpo = limpar_documento(documento_copiado)
+        if len(documento_limpo) == 14: # É CNPJ
+            tipo_pessoa = 2
+            break
+        elif len(documento_limpo) == 11: # É CPF
+            tipo_pessoa = 1
+            break
+        else: # Documento Inválido
+            documento_copiado = input(
+                f"\n{VERMELHO}*** ATENÇÃO: DOCUMENTO INVÁLIDO ***{RESET}\n"
+                f"{VERMELHO}   - Obtido: '{documento_copiado}' (Limpo: '{documento_limpo}'). Não é CPF/CNPJ.{RESET}\n"
+                f"{AMARELO}   - Por favor, digite o documento correto (apenas números) e pressione Enter: {RESET}"
+            )
+            print(f"{AMARELO}   - Ok, tentando validar o documento digitado...{RESET}")
+            # Loop continua para re-limpar e re-validar
 
     # ============================================================
-    # Passo 4: Consultar Documento via API / Obter IE
+    # Passo 4: Consultar API (se CNPJ) e Processar Suframa
     # ============================================================
-    inscricao_estadual_final = "Isento"
-    if len(documento_limpo) == 14: # É CNPJ
-        dados_cnpj_unificados = executar_acao_assistida(lambda: obter_dados_cnpj(documento_limpo),nome_acao=f"Obter dados unificados para CNPJ {documento_limpo}")
+    inscricao_estadual_final = "Isento" # Padrão
+    if tipo_pessoa == 2: # Somente para CNPJ
+        print(f"   - Documento é CNPJ: {documento_limpo}. Consultando APIs...")
+        dados_cnpj_unificados = executar_acao_assistida(lambda: obter_dados_cnpj(documento_limpo), nome_acao=f"Obter dados unificados para CNPJ {documento_limpo}")
         inscricao_estadual_final = dados_cnpj_unificados.get("inscricao_estadual", "Isento")
-        time.sleep(1)
-    elif len(documento_limpo) == 11: # É CPF
-        time.sleep(1)
-    else:
-        print(f"   - Documento '{documento_copiado}' não reconhecido. Definindo IE como 'Isento'.")
-        time.sleep(1)
 
+        # --- Lógica Suframa ---
+        if dados_cnpj_unificados.get("suframa_valido"):
+            suframa_numero = dados_cnpj_unificados.get("suframa_numero", "")
+            if suframa_numero:
+                print(f"   - Suframa Aprovado ({suframa_numero}). Preenchendo campo...")
+                executar_acao_assistida(lambda: digitar_texto("enderecos_idfiscais_suframa", suframa_numero), nome_acao=f"Preencher Suframa '{suframa_numero}'")
+            else:
+                print("   - Suframa válido, mas número não encontrado.")
+        else:
+            print("   - Suframa não aplicável ou não encontrado.")
+    else: # Se for CPF (tipo_pessoa == 1)
+        print(f"   - Documento é CPF: {documento_limpo}. Definindo IE como 'Isento'.")
     # ============================================================
-    # Passo 5: Escrever IE
+    # Passo 5: Escrever IE (Sempre executa após definir o valor final)
     # ============================================================
-    print(f"   - Inscrição Estadual {inscricao_estadual_final}. Digitando...")
-    executar_acao_assistida(lambda: digitar_texto("endereco_idfiscais_ie", inscricao_estadual_final), nome_acao=f"Digitar Inscrição Estadual '{inscricao_estadual_final}'")
-    time.sleep(1)
+    time.sleep(1.5)
+    print(f"   - Valor final para IE: '{inscricao_estadual_final}'. Digitando...")
+    executar_acao_assistida(lambda: digitar_texto("enderecos_idfiscais_ie", inscricao_estadual_final), nome_acao=f"Digitar Inscrição Estadual ('{inscricao_estadual_final}')")
+    time.sleep(0.5)
 
     # ============================================================
     # Passo 6: Clicar Atualizar e OK
     # ============================================================
-    executar_acao_assistida(lambda: clicar_elemento("endereco_idfiscais_atualizar"), nome_acao="Clicar 'Atualizar'")
-    time.sleep(1)
-    executar_acao_assistida(lambda: clicar_elemento("endereco_idfiscais_ok"), nome_acao="Clicar 'OK'")
+    executar_acao_assistida(lambda: clicar_elemento("enderecos_idfiscais_atualizar"), nome_acao="Clicar 'Atualizar'")
+    time.sleep(2)
+    executar_acao_assistida(lambda: clicar_elemento("enderecos_idfiscais_ok"), nome_acao="Clicar 'OK'")
     time.sleep(1)
 
+    # ============================================================
+    # Finalização
+    # ============================================================
+    print(f"--- Fim da Etapa IDs Fiscais. Tipo de documento processado: {'CPF' if tipo_pessoa==1 else 'CNPJ'} ---")
+    return tipo_pessoa
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':
