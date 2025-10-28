@@ -34,18 +34,8 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass22_simples_nascional": {
-    "path": "imagens/ass22_simples_nascional.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "ass32_id_socio": {
     "path": "imagens/ass32_id_socio.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass23_id_endereco": {
-    "path": "imagens/ass23_id_endereco.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -211,6 +201,21 @@
   },
   "tela_cadastro_parceirodeneg": {
     "path": "imagens/tela_cadastro_parceirodeneg.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "enderecos_simplesnac": {
+    "path": "imagens/enderecos_simplesnac.png",
+    "ajuste_x": "200",
+    "ajuste_y": ""
+  },
+  "enderecos_tabela": {
+    "path": "imagens/enderecos_tabela.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "enderecos_idfaturamento": {
+    "path": "imagens/enderecos_idfaturamento.png",
     "ajuste_x": "",
     "ajuste_y": ""
   }

@@ -41,13 +41,17 @@ def principal():
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Execução de Pagamentos ---{RESET}")
         executar_acao_assistida(lambda: preencher_aba_exepgto(divisao_pn), nome_acao="Preencher Aba Execução de Pagamentos")
 
+        """ Houve uma alteração onde o flag de preenchimento da Aba Condições de Pagamento
+            foi removido. Portanto, a etapa 5 foi comentada temporariamente."""
         # ETAPA 5: Preenchimento da Aba Condições de Pagamento
-        print(f"\n{AMARELO}--- Iniciando Etapa: Aba Condições de Pagamento ---{RESET}")
-        executar_acao_assistida(preencher_aba_condicoespgto)
+        #print(f"\n{AMARELO}--- Iniciando Etapa: Aba Condições de Pagamento ---{RESET}")
+        #executar_acao_assistida(preencher_aba_condicoespgto)
 
         # --- NOVA ETAPA 6: Preenchimento dos IDs Fiscais na Aba Endereços ---
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Endereços - IDs Fiscais ---{RESET}")
-        doc_caract = executar_acao_assistida(preencher_aba_enderecos_idfiscais)
+        tipo_pessoa, suframa = executar_acao_assistida(preencher_aba_enderecos_idfiscais)
+
+        
        
 
 

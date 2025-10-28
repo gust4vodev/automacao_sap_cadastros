@@ -10,7 +10,7 @@ import time
 # --- Imports de Ferramentas e Assistente ---
 from funcoes.copiar_texto_elemento import copiar_texto_elemento
 from assistente.executor import executar_acao_assistida
-from uteis.cores import VERMELHO, RESET # Para logs de erro internos
+from uteis.cores import VERDE, VERMELHO, RESET # Para logs de erro internos
 
 
 def obter_documento_tela_com_fallback() -> str:
@@ -73,7 +73,7 @@ def obter_documento_tela_com_fallback() -> str:
     if not documento_encontrado:
         raise ValueError("Não foi possível obter CNPJ ou CPF da tela após 3 tentativas gerais.")
 
-    print(f"   - Documento obtido da tela: '{documento_encontrado}'")
+    print(f"   - Documento obtido da tela: '{VERDE}{documento_encontrado}{RESET}'.")
     return documento_encontrado
 
 
