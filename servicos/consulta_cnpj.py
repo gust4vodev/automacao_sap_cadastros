@@ -15,6 +15,7 @@ from .api_cnpja_publica import consultar_cnpj as consultar_cnpj_publica
 from .api_cnpja_comercial_ie import consultar_ie_por_cnpj
 from configuracoes.carregar_config import API_CNPJ_SELECIONADA
 from uteis.extrator_json import extrair_dado_json
+from uteis.cores import VERDE, RESET
 
 
 # ============================================================
@@ -156,14 +157,13 @@ def obter_dados_cnpj(cnpj: str) -> Dict[str, Any]:
         inscricao_estadual_valida = "Isento"
         registrations: List[Dict] = extrair_dado_json(dados_ie_brutos, "registrations", padrao=[])
         if estado_empresa:
-            print(f"   - Validando {len(registrations)} IE(s) encontradas para o estado {estado_empresa}...")
             for registro in registrations:
                 ie_numero = extrair_dado_json(registro, "number")
                 ie_estado = extrair_dado_json(registro, "state")
                 ie_ativa = extrair_dado_json(registro, "enabled", padrao=False)
 
                 if ie_numero and ie_estado and ie_ativa and ie_estado.upper() == estado_empresa.upper():
-                    print(f"     -> IE válida encontrada: {ie_numero}/{ie_estado} (Ativa)")
+                    print(f"     -> da encontrada: {VERDE}{ie_numero}/{ie_estado} (Ativa){RESET}")
                     inscricao_estadual_valida = ie_numero
                     break
                 elif ie_numero and ie_estado:

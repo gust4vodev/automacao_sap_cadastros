@@ -13,11 +13,11 @@ from uteis.formatadores import limpar_documento
 from uteis.extrator_documento_tela import obter_documento_tela_com_fallback
 from servicos.consulta_cnpj import obter_dados_cnpj
 from assistente.executor import executar_acao_assistida
-from uteis.cores import AMARELO, VERMELHO, RESET
-from uteis.extrator_json import extrair_dado_json # Import necessário para Suframa
+from uteis.cores import AMARELO, VERDE, VERMELHO, RESET
+from funcoes.selecionar_dropdown import selecionar_dropdown
 
 
-def preencher_aba_enderecos_idfiscais() -> int:
+def preencher_aba_enderecos_idfiscais() -> tuple[int, str]:
     """(Orquestradora) Executa o fluxo para IDs Fiscais e retorna o tipo de doc."""
     # ============================================================
     # Passo 1: Navegar para Aba Endereços
@@ -55,11 +55,11 @@ def preencher_aba_enderecos_idfiscais() -> int:
             # Loop continua para re-limpar e re-validar
 
     # ============================================================
-    # Passo 4: Consultar API (se CNPJ) e Processar Suframa
+    # Passo 4: Consultar API (se CNPJ) e obter IE e Suframa
     # ============================================================
     inscricao_estadual_final = "Isento" # Padrão
+    suframa = "N"
     if tipo_pessoa == 2: # Somente para CNPJ
-        print(f"   - Documento é CNPJ: {documento_limpo}. Consultando APIs...")
         dados_cnpj_unificados = executar_acao_assistida(lambda: obter_dados_cnpj(documento_limpo), nome_acao=f"Obter dados unificados para CNPJ {documento_limpo}")
         inscricao_estadual_final = dados_cnpj_unificados.get("inscricao_estadual", "Isento")
 
@@ -67,19 +67,20 @@ def preencher_aba_enderecos_idfiscais() -> int:
         if dados_cnpj_unificados.get("suframa_valido"):
             suframa_numero = dados_cnpj_unificados.get("suframa_numero", "")
             if suframa_numero:
-                print(f"   - Suframa Aprovado ({suframa_numero}). Preenchendo campo...")
+                suframa = "Y"
+                print(f"   - Suframa Aprovado ({VERDE}{suframa_numero}{RESET}). Preenchendo campo...")
                 executar_acao_assistida(lambda: digitar_texto("enderecos_idfiscais_suframa", suframa_numero), nome_acao=f"Preencher Suframa '{suframa_numero}'")
             else:
                 print("   - Suframa válido, mas número não encontrado.")
         else:
             print("   - Suframa não aplicável ou não encontrado.")
     else: # Se for CPF (tipo_pessoa == 1)
-        print(f"   - Documento é CPF: {documento_limpo}. Definindo IE como 'Isento'.")
+        print(f"   - Documento é CPF: {VERDE}{documento_copiado}{RESET}. Definindo IE como 'Isento'.")
+
     # ============================================================
     # Passo 5: Escrever IE (Sempre executa após definir o valor final)
     # ============================================================
     time.sleep(1.5)
-    print(f"   - Valor final para IE: '{inscricao_estadual_final}'. Digitando...")
     executar_acao_assistida(lambda: digitar_texto("enderecos_idfiscais_ie", inscricao_estadual_final), nome_acao=f"Digitar Inscrição Estadual ('{inscricao_estadual_final}')")
     time.sleep(0.5)
 
@@ -92,10 +93,30 @@ def preencher_aba_enderecos_idfiscais() -> int:
     time.sleep(1)
 
     # ============================================================
-    # Finalização
+    # Passo 7: Preencher Simples Nacional (SE CNPJ)
     # ============================================================
-    print(f"--- Fim da Etapa IDs Fiscais. Tipo de documento processado: {'CPF' if tipo_pessoa==1 else 'CNPJ'} ---")
-    return tipo_pessoa
+    if tipo_pessoa == 2: # Repete a verificação, pois só se aplica a CNPJ
+        # Verifica o status do Simples Nacional obtido na consulta API (Passo 4)
+        status_simples = dados_cnpj_unificados.get("simples_nacional", None)
+
+        if status_simples is True:
+            valor_dropdown_simples = '1' # Sim
+            nome_opcao = "Sim"
+        else: # False ou None
+            valor_dropdown_simples = '2' # Não
+            nome_opcao = "Não"
+
+        print(f"   - Status Simples Nacional: Verde ({VERDE}{status_simples}{RESET}). Selecionando '{nome_opcao}'...")
+        executar_acao_assistida(lambda: selecionar_dropdown("enderecos_simplesnac", valor_dropdown_simples), nome_acao=f"Selecionar Simples Nacional como '{nome_opcao}'")
+        time.sleep(0.5)
+    else:
+        # Se for CPF, não faz nada para o Simples Nacional
+        print("   - Documento é CPF. Pulando etapa do Simples Nacional.")
+ 
+    # ============================================================
+    # Finalização e Retorno
+    # ============================================================
+    return tipo_pessoa, suframa
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':

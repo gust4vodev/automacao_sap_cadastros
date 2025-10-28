@@ -52,7 +52,6 @@ def consultar_ie_por_cnpj(cnpj: str, estado: str = "BR") -> Dict[str, Any]:
 
             # Verifica o status code da resposta
             if response.status_code == 200:
-                print(f"     ✅ Sucesso na tentativa: {tentativa['desc']}")
                 return response.json() # Sucesso, retorna o JSON
 
             elif response.status_code == 404:
