@@ -211,12 +211,12 @@
   },
   "enderecos_tabela": {
     "path": "imagens/enderecos_tabela.png",
-    "ajuste_x": "",
+    "ajuste_x": "250",
     "ajuste_y": ""
   },
   "enderecos_idfaturamento": {
     "path": "imagens/enderecos_idfaturamento.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
+    "ajuste_x": "250",
+    "ajuste_y": "20"
   }
 }
