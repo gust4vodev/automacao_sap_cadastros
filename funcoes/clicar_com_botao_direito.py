@@ -9,12 +9,9 @@ import time
 from .localizar_elemento import localizar_elemento
 
 
-def clicar_com_botao_direito(
-    nome_chave: str,
-    ajuste_x_override: int = None,
-    ajuste_y_override: int = None
-):
-    """Clica com o BOTÃO DIREITO em um elemento, usando uma âncora e lógica de ajuste.
+def clicar_com_botao_direito(nome_chave: str, ajuste_x_override: int = None, ajuste_y_override: int = None):
+    """
+    Clica com o BOTÃO DIREITO em um elemento, usando uma âncora e lógica de ajuste.
 
     A função primeiro localiza a âncora e então decide qual ajuste
     usar, com a seguinte prioridade:

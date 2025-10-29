@@ -40,7 +40,7 @@ def preencher_aba_exepgto(divisao_pn: int):
     time.sleep(0.5)
 
     # 6. Rolar a lista para baixo.
-    executar_acao_assistida(lambda: rolar_mouse_linhas(8, direcao='baixo'), nome_acao="Rolar 8 linhas para baixo na lista de formas de pgto")
+    executar_acao_assistida(lambda: rolar_mouse_linhas(11, direcao='baixo'), nome_acao="Rolar 8 linhas para baixo na lista de formas de pgto")
     time.sleep(0.5)
 
     # 7. Clicar na forma de pgto 'Misto'.

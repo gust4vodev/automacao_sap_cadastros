@@ -9,31 +9,26 @@ import time
 from .localizar_elemento import localizar_elemento
 
 
-def digitar_texto(
-    nome_chave: str,
-    texto_a_digitar: str,
-    ajuste_x_override: int = None,
-    ajuste_y_override: int = None
-):
-    """Digita um texto em um campo, usando uma âncora e lógica de ajuste.
+def digitar_texto(nome_chave: str, texto_a_digitar: str, ajuste_x_override: int = None, ajuste_y_override: int = None):
+    """
+    Digita um texto em um campo na tela utilizando uma âncora e lógica de ajuste inteligente.
 
-    A função primeiro localiza a âncora e então decide qual ajuste
-    usar, com a seguinte prioridade:
-    1. O ajuste de override passado diretamente para a função.
-    2. O ajuste padrão definido no arquivo parametros.json.
+    A função localiza a âncora definida no arquivo `parametros.json`, calcula a posição exata
+    onde o texto deve ser inserido aplicando ajustes em X e Y, e executa a digitação por meio
+    do PyAutoGUI. Os ajustes são determinados com a seguinte prioridade:
+
+    1. O ajuste de override passado diretamente à função.
+    2. O ajuste padrão definido no `parametros.json`.
     3. Zero, se nenhum dos anteriores for especificado.
 
     Args:
-        nome_chave (str): A chave do elemento no JSON a ser usado como âncora.
-        texto_a_digitar (str): O texto que será digitado no campo.
-        ajuste_x_override (int, optional): Um deslocamento X que sobrescreve
-                                           qualquer valor do JSON.
-        ajuste_y_override (int, optional): Um deslocamento Y que sobrescreve
-                                           qualquer valor do JSON.
+        nome_chave (str): Chave do elemento no arquivo `parametros.json` usada como âncora.
+        texto_a_digitar (str): Texto que será digitado no campo alvo.
+        ajuste_x_override (int, optional): Deslocamento em X que sobrescreve o valor do JSON.
+        ajuste_y_override (int, optional): Deslocamento em Y que sobrescreve o valor do JSON.
 
     Raises:
-        Exception: Levanta qualquer exceção vinda da localização do elemento
-                   ou da própria ação de digitação.
+        RuntimeError: Se ocorrer falha ao localizar o elemento ou ao executar a digitação.
     """
     # 1. Encontra a âncora e seus dados. Se falhar, levanta uma exceção.
     posicao_ancora, dados_elemento = localizar_elemento(nome_chave)
@@ -72,13 +67,13 @@ if __name__ == '__main__':
     Execute-o a partir da raiz do projeto com: python -m funcoes.digitar_texto
     """
     print(">>> Iniciando teste da função 'digitar_texto'...")
-    print(">>> Deixe a imagem âncora ('ass17_ie_id_fiscais') visível na tela.")
+    print(">>> Deixe a imagem âncora ('geral3_codigo') visível na tela.")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
         # --- Teste com os dados fornecidos ---
-        chave_teste = "ass17_ie_id_fiscais"
+        chave_teste = "geral3_codigo"
         valor_teste = "0123456789"
 
         print(f"--- Tentando digitar '{valor_teste}' no campo relativo a '{chave_teste}'...")
