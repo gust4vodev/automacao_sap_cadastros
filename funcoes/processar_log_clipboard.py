@@ -8,46 +8,52 @@ import io
 import time
 
 def obter_ultimo_usuario_do_log() -> str:
-    """Obtém a tabela da área de transferência e retorna o último usuário.
+    """
+    Lê a tabela de log copiada para a área de transferência e retorna o último usuário registrado.
 
-    Esta função lê a tabela copiada (que está em formato de abas),
-    a processa usando pandas, encontra a última linha e retorna o
-    'Código do usuário' que fez a última atualização.
+    A função obtém os dados da área de transferência (esperados no formato tabulado por TABS),
+    processa-os com pandas, identifica a última linha do log e extrai o valor da coluna
+    'Atualizado por - Código do usuário', retornando-o como string.
 
     Returns:
-        str: O 'Atualizado por - Código do usuário' da última entrada do log.
+        str: Código do usuário responsável pela última atualização registrada no log.
 
     Raises:
-        ValueError: Se a área de transferência estiver vazia ou o log for inválido.
-        RuntimeError: Se houver um erro no processamento com pandas.
-        KeyError: Se a coluna esperada não for encontrada no log.
+        ValueError: Se a área de transferência estiver vazia ou o conteúdo for inválido.
+        KeyError: Se a coluna 'Atualizado por - Código do usuário' não estiver presente no log.
+        RuntimeError: Se ocorrer qualquer erro durante o processamento com pandas.
     """
+
+    # 1. Lê o conteúdo da área de transferência usando pyperclip.
     try:
         dados_clipboard = pyperclip.paste()
+
+    # 2. Verifica se o clipboard está vazio e levanta erro se não houver dados.
         if not dados_clipboard:
             raise ValueError("A área de transferência está vazia. Não há log para processar.")
-
-        # 'io.StringIO' permite que o pandas leia uma string como se fosse um arquivo.
-        # 'sep=\t' informa ao pandas que as colunas são separadas por TABS.
+        
+    # 3. Usa io.StringIO para tratar a string do clipboard como um arquivo CSV com separador de tabulação (\t).
         df = pd.read_csv(io.StringIO(dados_clipboard), sep='\t')
 
+    # 4. Verifica se o DataFrame gerado está vazio e levanta erro se não houver linhas válidas.
         if df.empty:
             raise ValueError("Os dados do log no clipboard estão vazios ou em formato inválido.")
 
-        # Pega a última linha do log. O pandas 'iloc[-1]' faz isso.
+    # 5. Obtém a última linha do log com iloc[-1].
         ultima_modificacao = df.iloc[-1]
 
-        # Pega o valor da coluna 'Atualizado por - Código do usuário'.
-        # O nome da coluna deve ser exato, como no exemplo que você forneceu.
+    # 6. Extrai o valor da coluna específica 'Atualizado por - Código do usuário'.
         nome_usuario = ultima_modificacao['Atualizado por - Código do usuário']
 
+    # 7. Converte o valor para string, remove espaços extras e retorna.
         return str(nome_usuario).strip()
 
+    # 8. Captura KeyError se a coluna não existir e relança com mensagem clara.
     except KeyError:
-        # Este erro ocorre se a coluna esperada não for encontrada.
         raise KeyError("A coluna 'Atualizado por - Código do usuário' não foi encontrada no log.")
+    
+    # 9. Captura qualquer outra exceção e relança como RuntimeError com detalhes do erro.
     except Exception as e:
-        # Captura outros erros (ex: falha no pandas) e os relança.
         raise RuntimeError(f"Falha ao processar o log do clipboard: {e}")
 
 
@@ -60,19 +66,14 @@ if __name__ == '__main__':
     print(">>> Iniciando teste da função 'obter_ultimo_usuario_do_log'...")
 
     # --- SIMULAÇÃO DE DADOS NO CLIPBOARD (PARA TESTE) ---
-    # Para um teste 100% automático, podemos injetar dados falsos no clipboard.
-    # Basta descomentar as 6 linhas abaixo.
+    # Para um teste 100% automático, podemos injetar dados ficticios no clipboard.
 
-    # dados_falsos = (
-    #     "Instância\tCódigo do objeto\tAtualizado\tAtualizado por - Código do usuário\tAtualizado por - Nome do usuário\n"
-    #     "1\tC056202\t20/10/2025\tJONATHAN.FREITAS\tJONATHAN EDUARDO FREITAS\n"
-    #     "2\tC056202\t20/10/2025\tTESTE_USUARIO_FINAL\tTESTE USUARIO FINAL"
-    # )
-    # pyperclip.copy(dados_falsos)
-    # print(">>> (Dados de teste 'TESTE_USUARIO_FINAL' foram injetados no clipboard.)")
-
-    print(">>> Lendo dados REAIS do clipboard em 3 segundos...")
-    print(">>> (Para testar com dados reais, copie a tabela do SAP agora!)")
+    dados_falsos = (
+        "Instância\tCódigo do objeto\tAtualizado\tAtualizado por - Código do usuário\tAtualizado por - Nome do usuário\n"
+        "1\tC056202\t20/10/2025\tJONATHAN.FREITAS\tJONATHAN EDUARDO FREITAS\n"
+        "2\tC056202\t20/10/2025\tTESTE_USUARIO_FINAL\tTESTE USUARIO FINAL"
+    )
+    pyperclip.copy(dados_falsos)
     time.sleep(3)
 
     try:

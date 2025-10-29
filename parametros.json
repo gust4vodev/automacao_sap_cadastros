@@ -44,11 +44,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass28_telefone": {
-    "path": "imagens/ass28_telefone.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "aba_enderecos": {
     "path": "imagens/aba_enderecos.png",
     "ajuste_x": "",
@@ -61,11 +56,6 @@
   },
   "ass29_ddd": {
     "path": "imagens/ass29_ddd.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass31_codigo": {
-    "path": "imagens/ass31_codigo.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -218,5 +208,15 @@
     "path": "imagens/enderecos_idfaturamento.png",
     "ajuste_x": "250",
     "ajuste_y": "20"
+  },
+  "geral3_codigo": {
+    "path": "imagens/geral3_codigo.png",
+    "ajuste_x": "50",
+    "ajuste_y": "20"
+  },
+  "geral3_telefone": {
+    "path": "imagens/geral3_telefone.png",
+    "ajuste_x": "100",
+    "ajuste_y": ""
   }
 }

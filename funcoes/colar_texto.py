@@ -10,13 +10,9 @@ import time
 from .localizar_elemento import localizar_elemento
 
 
-def colar_texto(
-    nome_chave: str,
-    texto_a_colar: str,
-    ajuste_x_override: int = None,
-    ajuste_y_override: int = None
-):
-    """Cola um texto em um campo, usando uma âncora e lógica de ajuste.
+def colar_texto(nome_chave: str, texto_a_colar: str, ajuste_x_override: int = None, ajuste_y_override: int = None):
+    """
+    Cola um texto em um campo, usando uma âncora e lógica de ajuste.
 
     A função primeiro localiza a âncora e então decide qual ajuste
     usar, com a seguinte prioridade:
@@ -60,7 +56,6 @@ def colar_texto(
         pyautogui.click(x_alvo, y_alvo)
         time.sleep(0.5)
         # Limpa o campo antes de colar
-        pyautogui.hotkey('ctrl', 'a')
         pyautogui.press('backspace')
 
         # Ação de colar
@@ -79,13 +74,13 @@ if __name__ == '__main__':
     Execute-o a partir da raiz do projeto com: python -m funcoes.colar_texto
     """
     print(">>> Iniciando teste da função 'colar_texto'...")
-    print(">>> Deixe a imagem âncora ('ass17_ie_id_fiscais') visível na tela.")
+    print(">>> Deixe a imagem âncora ('geral3_codigo') visível na tela.")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
         # --- Teste com os dados fornecidos ---
-        chave_teste = "ass17_ie_id_fiscais"
+        chave_teste = "geral3_codigo"
         valor_teste = "0123456789"
 
         print(f"--- Tentando colar '{valor_teste}' no campo relativo a '{chave_teste}'...")

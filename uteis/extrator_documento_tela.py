@@ -28,51 +28,50 @@ def obter_documento_tela_com_fallback() -> str:
         Exception: Propaga exceções do motor se o usuário abortar.
     """
     documento_encontrado = ""
-    for tentativa_geral in range(1, 4):  # 3 tentativas gerais
+
+    # 1. Inicia loop de 3 tentativas gerais para obter CNPJ ou CPF da tela. 
+    for tentativa_geral in range(1, 4): 
+
+    # 2. Tenta copiar CNPJ via `copiar_texto_elemento` com `executar_acao_assistida`.
         try:
-            # Tenta CNPJ
-            doc = executar_acao_assistida(
-                lambda: copiar_texto_elemento("endereco_idfiscais_cnpj"),
-                nome_acao=f"[Tentativa {tentativa_geral}] Copiar CNPJ"
-            )
-            # Verifica se o motor retornou algo (não None e não vazio)
+            doc = executar_acao_assistida(lambda: copiar_texto_elemento("endereco_idfiscais_cnpj"),nome_acao=f"[Tentativa {tentativa_geral}] Copiar CNPJ")
+
+    # 3. Se CNPJ for obtido e válido, armazena e interrompe o loop. 
             if doc:
                 documento_encontrado = doc
                 break # Sucesso, sai do loop for
-        except Exception as e_cnpj:
-             # Se executar_acao_assistida levantou erro (ex: usuário abortou),
-             # ou se copiar_texto_elemento levantou erro inesperado.
+        except Exception as e_cnpj: # Não relança o erro aqui, permite tentar o CPF
             print(f"   {VERMELHO}- Falha crítica ao tentar obter CNPJ (detalhe: {e_cnpj}). Tentando CPF...{RESET}")
-            # Não relança o erro aqui, permite tentar o CPF
 
-        # Só tenta CPF se o CNPJ falhou OU se o motor retornou None (usuário ignorou)
+
+    # 4. Em caso de falha no CNPJ, tenta copiar CPF da mesma forma. 
         if not documento_encontrado:
+
+    # 5. Se CPF for obtido e válido, armazena e interrompe o loop.        
             try:
-                # Tenta CPF
-                doc = executar_acao_assistida(
-                    lambda: copiar_texto_elemento("endereco_idfiscais_cpf"),
-                    nome_acao=f"[Tentativa {tentativa_geral}] Copiar CPF"
-                )
+                doc = executar_acao_assistida(lambda: copiar_texto_elemento("endereco_idfiscais_cpf"), nome_acao=f"[Tentativa {tentativa_geral}] Copiar CPF")
                 if doc:
                      documento_encontrado = doc
                      break # Sucesso, sai do loop for
-            except Exception as e_cpf:
+                
+    # 6. Registra falha crítica com cor vermelha se ambas as tentativas falharem.             
+            except Exception as e_cpf: # Não relança, permite próxima tentativa geral
                 print(f"   {VERMELHO}- Falha crítica ao tentar obter CPF (detalhe: {e_cpf}).{RESET}")
-                # Não relança, permite próxima tentativa geral
-
+                
         # Se encontrou documento (CNPJ ou CPF), sai do loop
         if documento_encontrado:
             break
 
-        # Se não encontrou, imprime aviso e continua para próxima tentativa geral
+    # 7. Se não encontrou, imprime aviso e continua para próxima tentativa geral
         print(f"   - Nenhum documento encontrado na Tentativa Geral {tentativa_geral}.")
         if tentativa_geral < 3:
             time.sleep(1) # Pausa antes da próxima tentativa geral
 
-    # Se após 3 TENTATIVAS GERAIS nenhum documento foi encontrado, falha.
+    # 8. Após 3 tentativas sem sucesso, levanta `ValueError`. 
     if not documento_encontrado:
         raise ValueError("Não foi possível obter CNPJ ou CPF da tela após 3 tentativas gerais.")
 
+    # 9. Ao obter documento, exibe com cor verde e retorna o valor.  
     print(f"   - Documento obtido da tela: '{VERDE}{documento_encontrado}{RESET}'.")
     return documento_encontrado
 

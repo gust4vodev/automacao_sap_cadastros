@@ -15,59 +15,68 @@ def copiar_texto_elemento(
     ajuste_x_override: int = None,
     ajuste_y_override: int = None
 ) -> str:
-    """Clica em um elemento e copia seu conteúdo para o clipboard.
+    """
+    Clica em um elemento na tela e copia seu conteúdo para a área de transferência.
 
-    A função primeiro localiza a âncora, calcula a posição de clique,
-    limpa o clipboard, clica (o que seleciona o texto no SAP), simula Ctrl+C,
-    e então retorna o conteúdo da área de transferência.
+    A função localiza a âncora definida no arquivo `parametros.json`, calcula a posição exata
+    de clique aplicando ajustes em X e Y, limpa o clipboard, executa o clique e envia o atalho
+    Ctrl+C para copiar o texto do campo. O conteúdo copiado é então retornado como string.
 
     Args:
-        nome_chave (str): A chave do elemento no JSON a ser usado como âncora.
-        ajuste_x_override (int, optional): Deslocamento X que sobrescreve o JSON.
-        ajuste_y_override (int, optional): Deslocamento Y que sobrescreve o JSON.
+        nome_chave (str): Chave do elemento no arquivo `parametros.json` usada como âncora.
+        ajuste_x_override (int, optional): Deslocamento em X que sobrescreve o valor do JSON.
+        ajuste_y_override (int, optional): Deslocamento em Y que sobrescreve o valor do JSON.
 
     Returns:
-        str: O texto copiado da área de transferência. Retorna string vazia
-             se o campo estiver vazio.
+        str: Texto copiado da área de transferência. Retorna uma string vazia se o campo estiver vazio.
 
     Raises:
-        Exception: Levanta qualquer exceção vinda da localização, clique ou cópia.
-                   Inclui ValueError se o clipboard falhar.
+        RuntimeError: Se ocorrer falha ao localizar o elemento, clicar ou copiar o texto.
+        ValueError: Se houver erro ao acessar o conteúdo da área de transferência.
     """
-    # (Passos 1 a 4: Localizar âncora e calcular alvo - permanecem iguais)
+    # 1. Localiza a âncora na tela e obtém seus dados do JSON via `localizar_elemento`.  
     posicao_ancora, dados_elemento = localizar_elemento(nome_chave)
 
+    # 2. Define o ajuste final em X: usa override se fornecido, senão pega do JSON ou zero.
     if ajuste_x_override is not None:
         ajuste_x_final = ajuste_x_override
     else:
         ajuste_x_final = int(dados_elemento.get("ajuste_x") or 0)
 
+    # 3. Define o ajuste final em Y: usa override se fornecido, senão pega do JSON ou zero.  
     if ajuste_y_override is not None:
         ajuste_y_final = ajuste_y_override
     else:
         ajuste_y_final = int(dados_elemento.get("ajuste_y") or 0)
 
+    # 4. Calcula a posição final do clique com base na âncora e nos ajustes determinados.
     x_alvo = posicao_ancora.x + ajuste_x_final
     y_alvo = posicao_ancora.y + ajuste_y_final
 
-    # 5. Tenta executar a sequência de clique e cópia (com as correções).
+    # 5. Limpa a área de transferência com `pyperclip.copy('')` antes de qualquer ação.  
     try:
-        # CORREÇÃO 1: Limpa o clipboard ANTES de qualquer ação.
         pyperclip.copy('')
-        time.sleep(0.1) # Pequena pausa para garantir a limpeza
+        time.sleep(0.1)
 
-        pyautogui.click(x_alvo, y_alvo) # Clica para focar (e selecionar no SAP)
+    # 6. Clica no campo para focar e selecionar o conteúdo (comportamento SAP).
+        pyautogui.click(x_alvo, y_alvo)
         time.sleep(0.3)
-        # CORREÇÃO 2: Linha do Ctrl+A removida.
+
+    # 7. Executa Ctrl+C para copiar o texto selecionado.
         pyautogui.hotkey('ctrl', 'c') # Copia o texto selecionado
         time.sleep(0.3)
-
+    
+    # 8. Lê o conteúdo do clipboard com `pyperclip.paste()`.
         texto_copiado = pyperclip.paste()
+
+    # 9. Levanta erro se o clipboard estiver vazio ou inacessível.  
         if texto_copiado is None:
              raise ValueError("Falha ao ler o conteúdo da área de transferência após a cópia.")
 
+    # 10. Retorna o texto copiado, removendo espaços extras. 
         return str(texto_copiado).strip()
-
+    
+    # 11. Captura exceções e relança como `RuntimeError` com contexto.  
     except Exception as e:
         raise RuntimeError(f"Falha ao tentar copiar texto do elemento '{nome_chave}': {e}")
 
@@ -79,13 +88,13 @@ if __name__ == '__main__':
     Execute a partir da raiz: python -m funcoes.copiar_texto_elemento
     """
     print(">>> Iniciando teste da função 'copiar_texto_elemento'...")
-    print(">>> Deixe a imagem âncora ('endereco_idfiscais_cnpj') visível.")
+    print(">>> Deixe a imagem âncora ('geral3_telefone') visível.")
     print(">>> Certifique-se de que o campo CNPJ tenha algum valor.")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
-        chave_teste = "endereco_idfiscais_cnpj" # Mude se necessário
+        chave_teste = "geral3_telefone"
 
         print(f"--- Tentando copiar texto do campo '{chave_teste}'...")
         texto_obtido = copiar_texto_elemento(chave_teste)

@@ -9,32 +9,29 @@ import time
 from .localizar_elemento import localizar_elemento
 
 
-def selecionar_dropdown(
-    nome_chave: str,
-    valor_a_selecionar: str,
-    ajuste_x_override: int = None,
-    ajuste_y_override: int = None
-):
-    """Seleciona um valor em um dropdown, usando uma âncora e lógica de ajuste.
+def selecionar_dropdown(nome_chave: str, valor_a_selecionar: str, ajuste_x_override: int = None, ajuste_y_override: int = None):
+    """
+    Seleciona um valor em um dropdown usando uma âncora e lógica de ajuste.
 
-    A função primeiro localiza a âncora e então decide qual ajuste
-    usar, com a seguinte prioridade:
+    A função localiza uma imagem que serve como âncora e, a partir dela, determina
+    qual ajuste aplicar (os ajustes são coordenadas X e Y somadas às coordenadas
+    da imagem). A prioridade para definir o ajuste é a seguinte:
+
     1. O ajuste de override passado diretamente para a função.
     2. O ajuste padrão definido no arquivo parametros.json.
     3. Zero, se nenhum dos anteriores for especificado.
 
     Args:
-        nome_chave (str): A chave do elemento no JSON a ser usado como âncora.
-        valor_a_selecionar (str): O texto que será digitado para selecionar a opção.
-        ajuste_x_override (int, optional): Um deslocamento X que sobrescreve
-                                           qualquer valor do JSON.
-        ajuste_y_override (int, optional): Um deslocamento Y que sobrescreve
-                                           qualquer valor do JSON.
+        nome_chave (str): Chave do elemento no JSON usada como referência de âncora.
+        valor_a_selecionar (str): Texto que será digitado para selecionar a opção desejada.
+        ajuste_x_override (int, optional): Deslocamento em X que sobrescreve qualquer valor do JSON.
+        ajuste_y_override (int, optional): Deslocamento em Y que sobrescreve qualquer valor do JSON.
 
     Raises:
-        Exception: Levanta qualquer exceção vinda da localização do elemento
+        Exception: Propaga exceções originadas da localização do elemento
                    ou da interação com o dropdown.
     """
+
     # 1. Encontra a âncora e seus dados. Se falhar, levanta uma exceção.
     posicao_ancora, dados_elemento = localizar_elemento(nome_chave)
 
@@ -72,13 +69,13 @@ if __name__ == '__main__':
     Execute-o a partir da raiz do projeto com: python -m funcoes.selecionar_dropdown
     """
     print(">>> Iniciando teste da função 'selecionar_dropdown'...")
-    print(">>> Deixe a imagem âncora ('ass1_tipo_pn') visível na tela.")
+    print(">>> Deixe a imagem âncora ('geral1_tipopn.png') visível na tela.")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
         # --- Teste com os dados fornecidos ---
-        chave_teste = "ass1_tipo_pn"
+        chave_teste = "geral1_tipopn.png"
         valor_teste = "Cliente"
 
         print(f"--- Tentando selecionar '{valor_teste}' no dropdown '{chave_teste}'...")

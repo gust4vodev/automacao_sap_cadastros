@@ -7,33 +7,41 @@ import time
 
 def rolar_mouse_linhas(numero_de_linhas: int, direcao: str = 'baixo'):
     """
-    Executa rolagens da roda do mouse para simular a rolagem de linhas.
+     Executa rolagens da roda do mouse para simular a rolagem de linhas na tela.
+
+    A função utiliza a roda do mouse para rolar o conteúdo exibido, permitindo simular
+    movimentos de scroll controlados em uma direção específica.
 
     Args:
-        numero_de_linhas (int): Quantas linhas rolar.
-        direcao (str, optional): A direção da rolagem ('cima' ou 'baixo').
+        numero_de_linhas (int): Número de linhas a rolar.
+        direcao (str, optional): Direção da rolagem, podendo ser 'cima' ou 'baixo'.
                                  O padrão é 'baixo'.
 
     Raises:
-        ValueError: Se a direção for inválida.
-        RuntimeError: Se a ação do PyAutoGUI falhar.
+        ValueError: Se a direção informada não for 'cima' nem 'baixo'.
+        RuntimeError: Se ocorrer uma falha ao executar a ação com o PyAutoGUI.
     """
-    if direcao == 'baixo':
-        # PyAutoGUI usa valor negativo para rolar para baixo.
-        # O valor '-1' simula um "clique" da roda.
-        clique_por_linha = -1
-    elif direcao == 'cima':
-        clique_por_linha = 1
+
+    # 1. Verifica a direção da rolagem e define o valor do clique da roda.
+    if direcao == 'baixo': # PyAutoGUI usa valor negativo para rolar para baixo.
+        clique_por_linha = -100
+
+    elif direcao == 'cima': # PyAutoGUI usa valor positivo para rolar para cima.
+        clique_por_linha = 100
+
+    # 2. Levanta erro se a direção informada não for 'cima' ou 'baixo'.
     else:
         raise ValueError("Direção da rolagem inválida. Use 'cima' ou 'baixo'.")
 
+    # 3. Itera pelo número absoluto de linhas, garantindo funcionamento com valores negativos.
     try:
-        # Executa o scroll N vezes, uma linha de cada vez.
-        for _ in range(abs(numero_de_linhas)): # abs() garante que funcione mesmo se passar número negativo
+        for _ in range(abs(numero_de_linhas)):
             pyautogui.scroll(clique_por_linha)
-            # Pequena pausa entre cada rolagem para o sistema processar.
-            # Ajuste este valor se necessário.
-            time.sleep(0.05)
+
+    # 4. Executa uma rolagem por vez com pyautogui.scroll() e pausa de 0.30s entre cada uma.
+            time.sleep(0.30)
+
+    # 5. Captura exceções do PyAutoGUI e relança como RuntimeError com mensagem clara.
     except Exception as e:
         raise RuntimeError(f"Falha ao tentar rolar o mouse: {e}")
 

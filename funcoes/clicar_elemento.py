@@ -9,12 +9,9 @@ import time
 from .localizar_elemento import localizar_elemento
 
 
-def clicar_elemento(
-    nome_chave: str,
-    ajuste_x_override: int = None,
-    ajuste_y_override: int = None
-):
-    """Clica em um elemento, aplicando uma lógica de ajuste flexível.
+def clicar_elemento(nome_chave: str, ajuste_x_override: int = None, ajuste_y_override: int = None):
+    """
+    Clica em um elemento, aplicando uma lógica de ajuste flexível.
 
     A função primeiro localiza a âncora. Em seguida, decide qual ajuste
     usar, com a seguinte prioridade:
@@ -73,8 +70,7 @@ if __name__ == '__main__':
 
     try:
         # --- Exemplo de Teste ---
-        # Altere a chave abaixo para uma que exista no seu parametros.json
-        chave_teste = "aba_caracteristicas" # Mude para a chave real
+        chave_teste = "aba_caracteristicas"
 
         print(f"--- Tentando clicar no elemento '{chave_teste}'...")
         clicar_elemento(chave_teste)

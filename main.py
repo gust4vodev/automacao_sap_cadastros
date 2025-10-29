@@ -16,6 +16,8 @@ from acoes.preencher_aba_caracteristicas import preencher_aba_caracteristicas
 from acoes.preencher_aba_exepgto import preencher_aba_exepgto
 from acoes.preencher_aba_condicoespgto import preencher_aba_condicoespgto
 from acoes.preencher_aba_enderecos_idfiscais import preencher_aba_enderecos_idfiscais
+# --- NOVO IMPORT ---
+from acoes.processar_endereco_faturamento import processar_endereco_faturamento
 
 
 def principal():
@@ -25,7 +27,7 @@ def principal():
 
     try:
         # ETAPA 1: Verificações iniciais do ambiente.
-        print("⚙️  Executando verificações iniciais do ambiente...")
+        print("⚙️   Executando verificações iniciais do ambiente...")
         executar_acao_assistida(executar_verificacoes_iniciais)
 
         # ETAPA 2: Preenchimento da Aba Geral (Parte 1)
@@ -52,7 +54,11 @@ def principal():
         tipo_pessoa, suframa = executar_acao_assistida(preencher_aba_enderecos_idfiscais)
 
         
-       
+        # --- NOVA ETAPA 7: Processamento de Endereço de Faturamento ---
+        print(f"\n{AMARELO}--- Iniciando Etapa: Aba Endereços - Faturamento ---{RESET}")
+        # Chama a função que acabámos de testar e validar
+        executar_acao_assistida(processar_endereco_faturamento)
+        
 
 
         # Futuramente, as próximas "paredes" (outras abas) serão chamadas aqui.
