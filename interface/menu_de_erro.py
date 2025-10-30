@@ -9,7 +9,7 @@ def exibir_menu_de_falha(nome_processo: str, ultimo_erro: Exception) -> str:
     Exibe um menu de opções para o usuário após falhas consecutivas.
 
     Args:
-        nome_processo (str): O nome amigável da ação que falhou.
+        nome_processo (str): O nome amigável(primeira linha do docstring) da ação que falhou.
         ultimo_erro (Exception): A última exceção capturada que causou a falha.
 
     Returns:
@@ -21,7 +21,6 @@ def exibir_menu_de_falha(nome_processo: str, ultimo_erro: Exception) -> str:
     print(f"{VERMELHO}   -> Motivo: {ultimo_erro}{RESET}")
 
     while True:
-        # Descrições e perguntas ao usuário sem cor, como definido no padrão.
         print("\nO que você deseja fazer?")
         print("  1 - Tentar novamente a mesma etapa")
         print("  2 - Ignorar esta etapa e continuar a automação")
@@ -36,5 +35,4 @@ def exibir_menu_de_falha(nome_processo: str, ultimo_erro: Exception) -> str:
         elif escolha == '3':
             return 'abortar'
         else:
-            # Mensagem de erro de opção inválida em VERMELHO.
             print(f"{VERMELHO}Opção inválida. Por favor, digite 1, 2 ou 3.{RESET}")

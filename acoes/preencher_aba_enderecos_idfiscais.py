@@ -1,11 +1,10 @@
 # acoes/preencher_aba_enderecos_idfiscais.py
 
 """
-Módulo para a "parede" de ações: preenchimento dos IDs Fiscais na Aba Endereços.
+Módulo para preenchimento dos IDs Fiscais na Aba Endereços.
 """
 
 import time
-# --- Imports ---
 from navegacao.navegacao_abas import ir_para_aba
 from funcoes.clicar_elemento import clicar_elemento
 from funcoes.digitar_texto import digitar_texto
@@ -17,19 +16,22 @@ from uteis.cores import AMARELO, VERDE, VERMELHO, RESET
 from funcoes.selecionar_dropdown import selecionar_dropdown
 
 
-def preencher_aba_enderecos_idfiscais() -> tuple[int, str]:
-    """(Orquestradora) Executa o fluxo para IDs Fiscais e retorna o tipo de doc."""
+def preencher_aba_enderecos_idfiscais() -> tuple[int, str, str, list]:
+    """(Orquestradora) Executa o fluxo para IDs Fiscais e retorna tipo_pessoa, status_suframa, status_ie e a lista_socios."""
+    
     # ============================================================
     # Passo 1: Navegar para Aba Endereços
     # ============================================================
     executar_acao_assistida(lambda: ir_para_aba("enderecos"), nome_acao="Navegar para a Aba Endereços")
     time.sleep(1)
 
+
     # ============================================================
     # Passo 2: Abrir IDs Fiscais
     # ============================================================
     executar_acao_assistida(lambda: clicar_elemento("enderecos_idfiscais"), nome_acao="Abrir IDs Fiscais")
     time.sleep(1)
+
 
     # ============================================================
     # Passo 3: Obter e Validar Documento (com Loop e Correção Manual)
@@ -54,46 +56,59 @@ def preencher_aba_enderecos_idfiscais() -> tuple[int, str]:
             print(f"{AMARELO}   - Ok, tentando validar o documento digitado...{RESET}")
             # Loop continua para re-limpar e re-validar
 
+
     # ============================================================
-    # Passo 4: Consultar API (se CNPJ) e obter IE e Suframa
+    # Passo 4: Consultar API(se CNPJ) e obter Socios
     # ============================================================
     inscricao_estadual_final = "Isento" # Padrão
     suframa = "N"
+    lista_socios = []
+    dados_cnpj_unificados = {}
+
     if tipo_pessoa == 2: # Somente para CNPJ
         dados_cnpj_unificados = executar_acao_assistida(lambda: obter_dados_cnpj(documento_limpo), nome_acao=f"Obter dados unificados para CNPJ {documento_limpo}")
-        inscricao_estadual_final = dados_cnpj_unificados.get("inscricao_estadual", "Isento")
+        lista_socios = dados_cnpj_unificados.get("socios", [])
 
-        # --- Lógica Suframa ---
+
+    # ============================================================
+    # Passo 5: obter IE e Suframa
+    # ============================================================
+        inscricao_estadual_final = dados_cnpj_unificados.get("inscricao_estadual", "Isento")
         if dados_cnpj_unificados.get("suframa_valido"):
             suframa_numero = dados_cnpj_unificados.get("suframa_numero", "")
+
             if suframa_numero:
                 suframa = "Y"
                 print(f"   - Suframa Aprovado ({VERDE}{suframa_numero}{RESET}). Preenchendo campo...")
                 executar_acao_assistida(lambda: digitar_texto("enderecos_idfiscais_suframa", suframa_numero), nome_acao=f"Preencher Suframa '{suframa_numero}'")
             else:
                 print("   - Suframa válido, mas número não encontrado.")
+                
         else:
             print("   - Suframa não aplicável ou não encontrado.")
     else: # Se for CPF (tipo_pessoa == 1)
         print(f"   - Documento é CPF: {VERDE}{documento_copiado}{RESET}. Definindo IE como 'Isento'.")
+    time.sleep(1.5)
+
 
     # ============================================================
-    # Passo 5: Escrever IE (Sempre executa após definir o valor final)
+    # Passo 6: Escrever IE (Sempre executa após definir o valor final)
     # ============================================================
-    time.sleep(1.5)
     executar_acao_assistida(lambda: digitar_texto("enderecos_idfiscais_ie", inscricao_estadual_final), nome_acao=f"Digitar Inscrição Estadual ('{inscricao_estadual_final}')")
     time.sleep(0.5)
 
+
     # ============================================================
-    # Passo 6: Clicar Atualizar e OK
+    # Passo 7: Clicar Atualizar e OK
     # ============================================================
     executar_acao_assistida(lambda: clicar_elemento("enderecos_idfiscais_atualizar"), nome_acao="Clicar 'Atualizar'")
     time.sleep(2)
     executar_acao_assistida(lambda: clicar_elemento("enderecos_idfiscais_ok"), nome_acao="Clicar 'OK'")
     time.sleep(1)
 
+
     # ============================================================
-    # Passo 7: Preencher Simples Nacional (SE CNPJ)
+    # Passo 8: Preencher Simples Nacional (SE CNPJ)
     # ============================================================
     if tipo_pessoa == 2: # Repete a verificação, pois só se aplica a CNPJ
         # Verifica o status do Simples Nacional obtido na consulta API (Passo 4)
@@ -113,10 +128,14 @@ def preencher_aba_enderecos_idfiscais() -> tuple[int, str]:
         # Se for CPF, não faz nada para o Simples Nacional
         print("   - Documento é CPF. Pulando etapa do Simples Nacional.")
  
+
     # ============================================================
     # Finalização e Retorno
     # ============================================================
-    return tipo_pessoa, suframa
+    return tipo_pessoa, suframa, inscricao_estadual_final, lista_socios
+
+
+
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':

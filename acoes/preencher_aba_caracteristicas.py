@@ -5,8 +5,6 @@ Módulo para a "parede" de ações: preenchimento da aba Características.
 """
 
 import time
-
-# --- Imports de Módulos do Projeto ---
 from navegacao.navegacao_abas import ir_para_aba
 from funcoes.pressionar_teclas import pressionar_atalho_combinado, pressionar_tecla_unica
 from funcoes.clicar_com_botao_direito import clicar_com_botao_direito
@@ -18,18 +16,24 @@ from assistente.executor import executar_acao_assistida
 
 def preencher_aba_caracteristicas():
     """(Orquestradora) Executa o fluxo completo para a Aba Características."""
-
-    # 1. Navegar para a aba Características
+# ============================================================
+# 1. Navegar para a aba Características
+# ============================================================
     executar_acao_assistida(lambda: ir_para_aba("caracteristicas"), nome_acao="Navegar para a Aba Características")
     time.sleep(1)
 
-    # 2. pressionar o atalho para abrir o log de modificações Alt + F + L
+# ============================================================
+# 2. pressionar o atalho para abrir o log de modificações Alt + F + L
+# ============================================================
     executar_acao_assistida(lambda: pressionar_atalho_combinado('alt', 'f'), nome_acao="Pressionar atalho 'Alt+F'")
     time.sleep(1)
     executar_acao_assistida(lambda: pressionar_tecla_unica('l'), nome_acao="Pressionar tecla 'L' para abrir o Log")
     time.sleep(1)
 
-    # 3. Copia tabela do log de modificações para a área de transferência e fecha janela do log.
+
+# ============================================================
+# 3. Copia tabela do log de modificações para a área de transferência e fecha janela do log.
+# ============================================================
     executar_acao_assistida(lambda: clicar_com_botao_direito("caracteristicas_logmodif", ajuste_x_override=-50, ajuste_y_override=30), nome_acao="Clicar com botão direito no log para copiar")
     time.sleep(2)
     executar_acao_assistida(lambda: pressionar_tecla_unica('t'), nome_acao="Pressionar tecla 'T' para Copiar Tudo")
@@ -37,13 +41,22 @@ def preencher_aba_caracteristicas():
     executar_acao_assistida(lambda: pressionar_tecla_unica('esc'), nome_acao="Pressionar tecla 'Esc' para Fechar o Log")
     time.sleep(1)
 
-    # 4. Processar o log e obter o ultimo usuário.
+
+# ============================================================
+# 4. Processar o log e obter o ultimo usuário.
+# ============================================================
     ultimo_usuario = executar_acao_assistida(obter_ultimo_usuario_do_log,nome_acao="Processar log da área de transferência")
 
-    # 5. Definir a divisão com base no último usuário.
+
+# ============================================================
+# 5. Definir a divisão com base no último usuário.
+# ============================================================
     codigo_divisao = obter_codigo_divisao_por_usuario(ultimo_usuario)
 
-    # 6. Clicar na divisão correta.
+
+# ============================================================
+# 6. Clicar na divisão correta.
+# ============================================================
     if codigo_divisao == 4: # Usuário é PET7, clica em X.
         executar_acao_assistida(lambda: clicar_elemento("caracteristicas_pet7"),nome_acao=f"Definir divisão como PET7 (Usuário: {ultimo_usuario})")
     else: # Usuário é SERILON (ou outro), clica em Y.

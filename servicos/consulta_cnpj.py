@@ -2,13 +2,30 @@
 # 📦 servicos/consulta_cnpj.py
 # ============================================================
 """
-Módulo de interface/abstração para consulta de dados de CNPJ
-com cache simplificado (apenas o último resultado).
+Módulo responsável por unificar e padronizar consultas de dados de CNPJ,
+abstraindo diferentes APIs e aplicando cache simplificado para otimizar chamadas repetidas.
+
+Este módulo coordena o fluxo de obtenção de informações cadastrais, fiscais e de endereço
+de empresas a partir de APIs públicas e comerciais, consolidando tudo em um formato único e estável
+para uso interno pela automação.
+
+Principais recursos:
+
+Gerencia múltiplas fontes de dados (ex.: CNPJá Pública e API Comercial IE).
+
+Padroniza os resultados em um dicionário com campos consistentes.
+
+Implementa cache básico do último CNPJ consultado, reduzindo chamadas redundantes.
+
+Inclui lógica de fallback e validações adicionais para Suframa e Inscrição Estadual.
+
+Ideal para ser utilizado por camadas superiores (ex.: motores de automação, validação de cadastros,
+ou integração com sistemas ERP) que necessitem de dados consolidados sem lidar diretamente com APIs externas.
 """
 
 from typing import Dict, Any, List
 import re
-import time  # Adicionado para logs de cache
+import time 
 
 # --- Imports ---
 from .api_cnpja_publica import consultar_cnpj as consultar_cnpj_publica

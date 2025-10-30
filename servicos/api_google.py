@@ -19,10 +19,8 @@ def consultar_coordenadas(endereco: str) -> Tuple[float, float]:
         Tuple[float, float]: Uma tupla contendo (latitude, longitude).
 
     Raises:
-        requests.exceptions.RequestException: Em caso de falha na comunicação
-                                              com a API.
-        ValueError: Se o endereço não for encontrado ou a API retornar um
-                    erro (ex: chave inválida, zero resultados).
+        requests.exceptions.RequestException: Em caso de falha na comunicação com a API.
+        ValueError: Se o endereço não for encontrado ou a API retornar um erro (ex: chave inválida, zero resultados).
     """
     # 1. URL base da API de Geocodificação do Google.
     base_url = "https://maps.googleapis.com/maps/api/geocode/json"
