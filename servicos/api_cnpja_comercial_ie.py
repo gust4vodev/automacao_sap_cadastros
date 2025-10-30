@@ -88,10 +88,9 @@ if __name__ == "__main__":
     import sys
     from pathlib import Path
     sys.path.append(str(Path(__file__).resolve().parent.parent))
-    import json # Adicionado para imprimir o JSON formatado
+    import json
 
-    # Use um CNPJ real para o teste que você saiba que tem IE
-    CNPJ_TESTE = "04143008002705" # Substitua se necessário
+    CNPJ_TESTE = "04143008002705"
 
     print(f">>> Iniciando teste da função 'consultar_ie_por_cnpj' com CNPJ: {CNPJ_TESTE}...")
     try:

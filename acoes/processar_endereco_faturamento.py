@@ -1,24 +1,20 @@
 # acoes/processar_endereco_faturamento.py
 
 """
-Módulo para a "parede" de ações: processar o endereço de faturamento,
+Módulo para a "tabela de endereços": processar o endereço de faturamento, valida campos faltantes,
 obter coordenadas e atualizar a tabela.
 """
 
 import time
 import pandas as pd
-import re
 import pyperclip
-
-# --- Imports de Módulos do Projeto ---
 from funcoes.clicar_com_botao_direito import clicar_com_botao_direito
 from funcoes.pressionar_teclas import pressionar_tecla_unica, pressionar_atalho_combinado
 from funcoes.clicar_elemento import clicar_elemento
 from uteis.processador_tabela_clipboard import ler_tabela_clipboard_para_dataframe, converter_dataframe_para_string_tabulada
 from servicos.api_google import consultar_coordenadas
-# NOVOS IMPORTS: Funções auxiliares extraídas
 from uteis.validadores import validar_tabela_endereco           
-from uteis.formatadores import formatar_endereco_para_api # <- Nova função
+from uteis.formatadores import formatar_endereco_para_api
 from assistente.executor import executar_acao_assistida
 from uteis.cores import VERMELHO, RESET, AMARELO
 
@@ -34,30 +30,31 @@ def processar_endereco_faturamento():
     executar_acao_assistida(lambda: pressionar_tecla_unica('t'), nome_acao="Pressionar tecla 'T' para Copiar Tabela de Endereço")
     time.sleep(1)
 
+
     # ============================================================
     # Passo 2: Ler Tabela do Clipboard
     # ============================================================
-    df_endereco: pd.DataFrame = executar_acao_assistida(
-        ler_tabela_clipboard_para_dataframe,
-        nome_acao="Ler tabela de endereço do clipboard"
-    )
+    df_endereco: pd.DataFrame = executar_acao_assistida(ler_tabela_clipboard_para_dataframe, nome_acao="Ler tabela de endereço do clipboard")
+
 
     # ============================================================
     # Passo 3: Validar Campos Essenciais (USA FUNÇÃO AUXILIAR)
     # ============================================================
     try:
-        validar_tabela_endereco(df_endereco) # Chama a função de uteis/validadores.py
+        validar_tabela_endereco(df_endereco)
     except ValueError as val_err:
          raise val_err # Re-levanta para o motor executor
 
+
     # ============================================================
-    # Passo 4: Extrair Endereço para API (USA FUNÇÃO AUXILIAR)
+    # Passo 4: Extrair Endereço para API
     # ============================================================
     try:
         primeira_linha = df_endereco.iloc[0]
-        endereco_para_api = formatar_endereco_para_api(primeira_linha) # Chama a função de uteis/formatadores.py
+        endereco_para_api = formatar_endereco_para_api(primeira_linha) 
     except Exception as e:
         raise RuntimeError(f"Erro ao preparar endereço para API: {e}")
+
 
     # ============================================================
     # Passo 5: Consultar Coordenadas
@@ -65,24 +62,21 @@ def processar_endereco_faturamento():
     latitude = None
     longitude = None
     try:
-        lat, lon = executar_acao_assistida(
-            lambda: consultar_coordenadas(endereco_para_api),
-            nome_acao=f"Consultar coordenadas para '{endereco_para_api}'"
-        )
+        lat, lon = executar_acao_assistida(lambda: consultar_coordenadas(endereco_para_api), nome_acao=f"Consultar coordenadas para '{endereco_para_api}'")
         latitude = lat; longitude = lon
         print(f"    ✅ Coordenadas obtidas: Lat={latitude}, Lon={longitude}")
     except Exception as e:
         print(f"    {AMARELO}⚠️ Aviso: Falha ao obter coordenadas: {e}{RESET}")
 
+
     # ============================================================
     # Passo 6: Formatar Coordenadas e Atualizar DataFrame
     # ============================================================
-
     lat_formatada = ""; lon_formatada = ""
     try:
         if latitude is not None and longitude is not None:
             
-            # --- NOVO PASSO: Truncar os valores para 5 casas decimais ---
+            # --- Truncar os valores para 5 casas decimais ---
             # Ex: -15.7534813 -> -15.75348
             # Ex: -47.7791001 -> -47.7791 (ou -47.77910)
             
@@ -92,7 +86,6 @@ def processar_endereco_faturamento():
             lat_truncada = int(latitude * 100_000) / 100_000.0
             lon_truncada = int(longitude * 100_000) / 100_000.0
             
-            # --- FIM DO NOVO PASSO ---
 
             # 1. Cria as strings formatadas (com vírgula)
             #    Usamos :.5f para garantir que valores como ,7791 sejam impressos como ,77910
@@ -100,7 +93,6 @@ def processar_endereco_faturamento():
             lon_formatada = f"{lon_truncada:.5f}".replace('.', ',')
 
         # 2. Guarda os NÚMEROS (floats) TRUNCADOS no DataFrame
-        #    (Isto resolve o FutureWarning e usa os 5 decimais)
         df_endereco.loc[0, 'Latitude'] = lat_truncada
         df_endereco.loc[0, 'Longitude'] = lon_truncada
 
@@ -109,31 +101,22 @@ def processar_endereco_faturamento():
         
     except Exception as e:
             raise RuntimeError(f"Erro ao atualizar DataFrame com coordenadas: {e}")
-   # ============================================================
+    
+
+    # ============================================================
     # Passo 7: Reformatar DataFrame para String Tabulada
     # ============================================================
     print("   - Convertendo tabela atualizada de volta para formato de clipboard...")
     try:
-        # --- CORREÇÃO AQUI ---
-        # Chama a função correta: converter_dataframe_para_string_tabulada
-        # Passa o DataFrame modificado (df_endereco) como argumento
-        tabela_formatada_string: str = executar_acao_assistida(
-            lambda: converter_dataframe_para_string_tabulada(df_endereco),
-            nome_acao="Formatar tabela de endereço para área de transferência"
-        )
-        # --- FIM DA CORREÇÃO ---
-
-        # Verifica se a conversão retornou uma string válida
+        tabela_formatada_string: str = executar_acao_assistida(lambda: converter_dataframe_para_string_tabulada(df_endereco), nome_acao="Formatar tabela de endereço para área de transferência")
         if not tabela_formatada_string:
              raise ValueError("Função de formatação retornou string vazia.")
-
-        print("    ✅ Tabela reformatada com sucesso.")
-
     except Exception as e:
-        # Captura erros da conversão ou se a string for vazia
         erro_msg = f"Erro ao reformatar a tabela para colar: {e}"
         print(f"    {VERMELHO}❌ ERRO: {erro_msg}{RESET}")
         raise RuntimeError(erro_msg) # Levanta erro para o motor
+    
+
     # ============================================================
     # Passo 8: Colar Tabela de Volta no SAP
     # ============================================================
@@ -148,7 +131,6 @@ def processar_endereco_faturamento():
         time.sleep(1)
         executar_acao_assistida(lambda: pressionar_atalho_combinado('enter'), nome_acao="Colar tabela atualizada (Ctrl+V)")
         time.sleep(1)
-        print("    ✅ Tabela colada.")
     except Exception as e:
         raise RuntimeError(f"Erro ao colar a tabela de volta no SAP: {e}")
 
@@ -162,7 +144,7 @@ if __name__ == '__main__':
     from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 
     print(">>> Iniciando teste da 'parede': processar_endereco_faturamento...")
-    print(">>> Testando Passos 1 a 3 (Copiar, Ler, Validar)...") # Mensagem atualizada
+    print(">>> Testando Passos 1 a 3 (Copiar, Ler, Validar)...")
     print(">>> Certifique-se de que a âncora 'enderecos_tabela' esteja visível.")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
@@ -170,7 +152,6 @@ if __name__ == '__main__':
     try:
         processar_endereco_faturamento()
         print("\n--- Teste da 'parede' (Passos 1 a 3) concluído com SUCESSO! ---")
-        # (Opcional: Verificar DataFrame lido)
 
     except AutomacaoAbortadaPeloUsuario:
         print("\n--- Teste ABORTADO pelo usuário. ---")

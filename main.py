@@ -5,19 +5,20 @@ Ponto de entrada principal da aplicação de automação SAP B1.
 """
 
 # --- Imports ---
-import configuracoes.carregar_config
 from validacoes.verificacoes_iniciais import executar_verificacoes_iniciais
 from assistente.executor import executar_acao_assistida
 from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 from uteis.cores import AMARELO, VERMELHO, RESET
-# --- Imports das "Paredes" de Ações ---
 from acoes.preencher_aba_geral1 import processar_aba_geral_parte1
 from acoes.preencher_aba_caracteristicas import preencher_aba_caracteristicas
 from acoes.preencher_aba_exepgto import preencher_aba_exepgto
 from acoes.preencher_aba_condicoespgto import preencher_aba_condicoespgto
 from acoes.preencher_aba_enderecos_idfiscais import preencher_aba_enderecos_idfiscais
-# --- NOVO IMPORT ---
 from acoes.processar_endereco_faturamento import processar_endereco_faturamento
+from acoes.preencher_socios import preencher_aba_socios
+
+
+
 
 
 def principal():
@@ -49,19 +50,25 @@ def principal():
         #print(f"\n{AMARELO}--- Iniciando Etapa: Aba Condições de Pagamento ---{RESET}")
         #executar_acao_assistida(preencher_aba_condicoespgto)
 
-        # --- NOVA ETAPA 6: Preenchimento dos IDs Fiscais na Aba Endereços ---
+        # ETAPA 6: Preenchimento dos IDs Fiscais na Aba Endereços
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Endereços - IDs Fiscais ---{RESET}")
-        tipo_pessoa, suframa = executar_acao_assistida(preencher_aba_enderecos_idfiscais)
+        tipo_pessoa, suframa, status_ie, socios = executar_acao_assistida(preencher_aba_enderecos_idfiscais)
 
+        print(f"tipo_pessoa: {tipo_pessoa}")
+        print(f"suframa: {suframa}")
+        print(f"status_ie: {status_ie}")
+        print(f"socios: {socios}")
         
-        # --- NOVA ETAPA 7: Processamento de Endereço de Faturamento ---
+        # ETAPA 7: Processamento de Endereço de Faturamento
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Endereços - Faturamento ---{RESET}")
-        # Chama a função que acabámos de testar e validar
         executar_acao_assistida(processar_endereco_faturamento)
         
 
+         # ETAPA 8: Preenchimento dos Socios
+        if tipo_pessoa == 2 and socios:        
+            print(f"\n{AMARELO}--- Iniciando Etapa: Aba Pessoas de Contato (Sócios) ---{RESET}")
+            executar_acao_assistida(lambda: preencher_aba_socios(socios), nome_acao="Preencher Aba Pessoas de Contato (Sócios)")
 
-        # Futuramente, as próximas "paredes" (outras abas) serão chamadas aqui.
 
 
     except AutomacaoAbortadaPeloUsuario:

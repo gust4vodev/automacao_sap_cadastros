@@ -22,7 +22,7 @@ def ir_para_aba(nome_da_aba: str):
     # Constrói o nome da chave do JSON dinamicamente, seguindo nosso padrão.
     chave_da_aba = f"aba_{nome_da_aba}"
 
-    # A docstring da ação será a própria chave, tornando o log do motor claro.
+    # A docstring da ação será a própria chave, tornando o log do 'assistente.executor' claro.
     executar_acao_assistida(
         lambda: clicar_elemento(chave_da_aba),
         nome_acao=f"Navegar para a aba '{nome_da_aba.capitalize()}'"
@@ -49,7 +49,6 @@ if __name__ == '__main__':
     time.sleep(5)
 
     try:
-        # Testamos a função genérica chamando-a com o nome da aba desejada.
         ir_para_aba("geral")
         print("\n--- Teste de navegação concluído com SUCESSO! ---")
 

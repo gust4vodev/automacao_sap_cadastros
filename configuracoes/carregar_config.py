@@ -52,9 +52,7 @@ if not CNPJA_API_URL_COMERCIAL_IE:
 if not CNPJA_API_KEY_COMERCIAL:
     raise ValueError("A chave CNPJA_API_KEY_COMERCIAL não foi encontrada no .env")
 
-
 # Valida se a API principal selecionada está entre as suportadas
 APIS_SUPORTADAS = {1}  # Por enquanto, só suportamos a API 1 (CNPJá Pública)
 if API_CNPJ_SELECIONADA not in APIS_SUPORTADAS:
     raise ValueError(f"API_CNPJ_SELECIONADA ({API_CNPJ_SELECIONADA}) não é suportada. APIs válidas: {APIS_SUPORTADAS}")
-

@@ -1,46 +1,36 @@
 # acoes/preencher_aba_condicoespgto.py
 
 """
-Módulo para a "parede" de ações: preenchimento da aba Condições de Pagamento.
+Módulo para preenchimento da aba Condições de Pagamento.
 """
 
 import time
-
-# --- Imports de Módulos do Projeto ---
 from navegacao.navegacao_abas import ir_para_aba
 from funcoes.clicar_elemento import clicar_elemento
 from assistente.executor import executar_acao_assistida
 
 
 def preencher_aba_condicoespgto():
-    """(Orquestradora) Executa o fluxo completo para a Aba Condições de Pagamento.
-
-    Cada passo é executado individualmente pelo motor.
+    """(Orquestradora) Executa o fluxo completo para a Aba Condições de Pagamento..
     """
-    # Passo 1: Navegar para a aba.
-    # CORREÇÃO: Usar a chave correta 'aba_condicoespgto'
+# ============================================================
+# Passo 1: Navegar para a aba.
+# ============================================================
     time.sleep(1)
-    executar_acao_assistida(
-        lambda: ir_para_aba("condicoespgto"),
-        nome_acao="Navegar para a Aba Condições de Pagamento"
-    )
+    executar_acao_assistida(lambda: ir_para_aba("condicoespgto"), nome_acao="Navegar para a Aba Condições de Pagamento")
     time.sleep(1)
 
-    # Passo 2: Clicar no elemento de entrega parcial.
-    executar_acao_assistida(
-        # A chave segue o nosso padrão: [aba]_[elemento]
-        lambda: clicar_elemento("condicoespgto_entregparcial"),
-        nome_acao="Marcar/Desmarcar 'Permitir Entrega Parcial'"
-    )
+# ============================================================
+# Passo 2: Clicar no elemento de entrega parcial.
+# ============================================================
+    executar_acao_assistida(lambda: clicar_elemento("condicoespgto_entregparcial"), nome_acao="Marcar/Desmarcar 'Permitir Entrega Parcial'")
     time.sleep(0.5)
-
-    # Próximos passos (se houver) serão adicionados aqui.
 
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':
     """
-    Bloco para testar esta "parede" de forma isolada.
+    Bloco para testar de forma isolada.
     Execute-o a partir da raiz do projeto com: python -m acoes.preencher_aba_condicoespgto
     """
     import sys

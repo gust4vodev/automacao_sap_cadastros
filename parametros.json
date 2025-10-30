@@ -9,38 +9,8 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "ass30_celular": {
-    "path": "imagens/ass30_celular.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass25_data_abertura": {
-    "path": "imagens/ass25_data_abertura.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass26_indicador_ie": {
-    "path": "imagens/ass26_indicador_ie.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "pet7_folha": {
     "path": "imagens/pet7_folha.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass27_op_consumidor": {
-    "path": "imagens/ass27_op_consumidor.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass32_id_socio": {
-    "path": "imagens/ass32_id_socio.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass24_tipo_pessoa": {
-    "path": "imagens/ass24_tipo_pessoa.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -51,16 +21,6 @@
   },
   "aba_socio": {
     "path": "imagens/aba_socio.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass29_ddd": {
-    "path": "imagens/ass29_ddd.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "ass33_novo_socio": {
-    "path": "imagens/ass33_novo_socio.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -146,7 +106,7 @@
   },
   "exepgto_fecharformas": {
     "path": "imagens/exepgto_fecharformas.png",
-    "ajuste_x": "855",
+    "ajuste_x": "",
     "ajuste_y": ""
   },
   "condicoespgto_entregparcial": {
@@ -217,6 +177,56 @@
   "geral3_telefone": {
     "path": "imagens/geral3_telefone.png",
     "ajuste_x": "100",
+    "ajuste_y": ""
+  },
+  "geral2_tipo_pessoa": {
+    "path": "imagens/geral2_tipo_pessoa.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "pessoascontato_novosocio": {
+    "path": "imagens/pessoascontato_novosocio.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral2_celular": {
+    "path": "imagens/geral2_celular.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "pessoascontato_novosocio2": {
+    "path": "imagens/pessoascontato_novosocio2.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral2_data_abertura": {
+    "path": "imagens/geral2_data_abertura.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral2_indicador_ie": {
+    "path": "imagens/geral2_indicador_ie.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral2_ddd": {
+    "path": "imagens/geral2_ddd.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "pessoascontato_socio_sim": {
+    "path": "imagens/pessoascontato_socio_sim.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral2_op_consumidor": {
+    "path": "imagens/geral2_op_consumidor.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "pessoascontato_idsocio": {
+    "path": "imagens/pessoascontato_idsocio.png",
+    "ajuste_x": "",
     "ajuste_y": ""
   }
 }

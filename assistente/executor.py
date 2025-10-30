@@ -9,15 +9,11 @@ from interface.menu_de_erro import exibir_menu_de_falha
 from uteis.cores import VERDE, VERMELHO, CIANO, RESET
 from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 
-def executar_acao_assistida(
-    funcao_acao: Callable[..., Any],
-    nome_acao: str = None
-) -> Any:
+def executar_acao_assistida(funcao_acao: Callable[..., Any], nome_acao: str = None) -> Any:
     """
     Executa uma ação, captura exceções e, em caso de sucesso, repassa o retorno.
     """
 
-    # --- MUDANÇA 2: LÓGICA PARA LER A DOCSTRING ---
     # Se um nome_acao não foi fornecido explicitamente...
     if nome_acao is None:
         # ...tenta extrair a primeira linha da docstring da função.

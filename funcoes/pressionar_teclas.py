@@ -66,13 +66,13 @@ if __name__ == '__main__':
     time.sleep(5)
 
     try:
-        print("--- Testando: pressionar_atalho_combinado('ctrl', 'o')")
-        pressionar_atalho_combinado('ctrl', 'o')
+        print("--- Testando: pressionar_atalho_combinado('shift', 'tab')")
+        pressionar_atalho_combinado('shift', 'tab')
         time.sleep(1)
 
-        print("--- Testando: pressionar_tecla_unica('l')")
-        pressionar_tecla_unica('l')
-        print("--- Teste concluído com SUCESSO!")
+        #print("--- Testando: pressionar_tecla_unica('l')")
+        #pressionar_tecla_unica('l')
+        #print("--- Teste concluído com SUCESSO!")
 
     except Exception as e:
         print(f"--- Teste FALHOU! Erro: {e}")
