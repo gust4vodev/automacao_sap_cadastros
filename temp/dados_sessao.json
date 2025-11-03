@@ -1,0 +1,20 @@
+{
+    "tipo_pessoa": 2,
+    "status_cnpj": "Ativa",
+    "razao_social": "58.060.155 ANNA LUIZA PEREIRA FERNANDES",
+    "data_abertura": "2024-11-11",
+    "inscricao_estadual": "429030408114",
+    "simples_nacional": true,
+    "socios": [],
+    "endereco": {
+        "tipo_logradouro": "Rua",
+        "logradouro": "Francisco Jose Longui",
+        "numero": "847",
+        "complemento": "Brcao",
+        "bairro": "Jardim Nova Era I",
+        "cep": "15270000",
+        "cidade": "Macaubal",
+        "estado": "SP"
+    },
+    "documento_consultado": "58060155000101"
+}

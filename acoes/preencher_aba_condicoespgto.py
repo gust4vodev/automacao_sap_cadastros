@@ -39,16 +39,16 @@ if __name__ == '__main__':
 
     from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 
-    print(">>> Iniciando teste da 'parede': preencher_aba_condicoespgto...")
+    print(">>> Iniciando teste da ação: preencher_aba_condicoespgto...")
     print(">>> Testando Passos 1 e 2 (Navegação, Clique Entrega Parcial)...")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
         preencher_aba_condicoespgto()
-        print("\n--- Teste da 'parede' (Passos 1 e 2) concluído com SUCESSO! ---")
+        print("\n--- Teste da ação (Passos 1 e 2) concluído com SUCESSO! ---")
 
     except AutomacaoAbortadaPeloUsuario:
         print("\n--- Teste ABORTADO pelo usuário. ---")
     except Exception as e:
-        print(f"\n--- Teste da 'parede' FALHOU! Erro: {e} ---")
+        print(f"\n--- Teste da ação FALHOU! Erro: {e} ---")

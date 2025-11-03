@@ -20,7 +20,6 @@ def validar_tabela_endereco(dataframe: pd.DataFrame):
                     faltar, ou algum campo essencial estiver vazio/nulo
                     na primeira linha.
     """
-    print("      - Iniciando validação da tabela de endereço...")
 
     # Lista das colunas que NÃO podem estar vazias
     colunas_essenciais = [
@@ -54,8 +53,6 @@ def validar_tabela_endereco(dataframe: pd.DataFrame):
         erro_msg = f"Dados essenciais ausentes/vazios na tabela de endereço: {'; '.join(campos_problematicos)}"
         print(f"      ❌ ERRO Validação: {erro_msg}")
         raise ValueError(erro_msg)
-    else:
-        print("      ✅ Validação da tabela de endereço concluída com sucesso.")
 
 
 # --- Camada de Teste Direto ---

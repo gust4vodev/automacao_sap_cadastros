@@ -22,9 +22,7 @@ def executar_acao_assistida(funcao_acao: Callable[..., Any], nome_acao: str = No
         else:
             # Caso a função não tenha docstring, usa um nome genérico.
             nome_acao = "Ação sem nome definido"
-    # -----------------------------------------------
 
-    # O resto do código da função permanece exatamente o mesmo.
     ultimo_erro = None
 
     while True:

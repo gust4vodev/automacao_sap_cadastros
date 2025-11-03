@@ -17,7 +17,7 @@ def processar_aba_geral_parte1():
     """(Orquestradora) Executa o fluxo completo para a Aba Geral.
 
     Esta função de alto nível orquestra a sequência de ações, passando
-    cada passo individualmente pelo motor de execução assistida para
+    cada passo individualmente pelo Assistente de execução assistida para
     controle granular de falhas e retentativas.
     """
     
@@ -78,15 +78,15 @@ if __name__ == '__main__':
 
     from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 
-    print(">>> Iniciando teste da 'parede' granular: processar_aba_geral_parte1...")
+    print(">>> Iniciando teste da ação granular: processar_aba_geral_parte1...")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
         processar_aba_geral_parte1()
-        print("\n--- Teste da 'parede' concluído com SUCESSO! ---")
+        print("\n--- Teste da ação concluído com SUCESSO! ---")
 
     except AutomacaoAbortadaPeloUsuario:
         print("\n--- Teste ABORTADO pelo usuário. ---")
     except Exception as e:
-        print(f"\n--- Teste da 'parede' FALHOU! Erro: {e} ---")
+        print(f"\n--- Teste da ação FALHOU! Erro: {e} ---")

@@ -28,7 +28,7 @@ def clicar_elemento(nome_chave: str, ajuste_x_override: int = None, ajuste_y_ove
 
     Raises:
         Exception: Levanta qualquer exceção vinda da localização do elemento
-                   ou da própria ação de clique, para ser capturada pelo motor.
+                   ou da própria ação de clique, para ser capturada pelo Assistente executor.
     """
     # 1. Encontra a âncora e seus dados. Se falhar, levanta uma exceção.
     posicao_ancora, dados_elemento = localizar_elemento(nome_chave)

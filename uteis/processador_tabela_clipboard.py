@@ -37,8 +37,7 @@ def ler_tabela_clipboard_para_dataframe() -> pd.DataFrame:
         if dataframe.empty:
             raise ValueError("Os dados no clipboard estão vazios ou não formam uma tabela válida.")
         
-    # 5. Exibe mensagem de sucesso ao ler tabela.  
-        print("   - Tabela lida do clipboard com sucesso.")
+    # 5. Exibe mensagem de sucesso ao ler tabela.
         return dataframe
     
     # 6. Captura erros do pandas e relança como `RuntimeError` com contexto.  

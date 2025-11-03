@@ -3,176 +3,135 @@
 # ============================================================
 """
 Módulo responsável por unificar e padronizar consultas de dados de CNPJ,
-abstraindo diferentes APIs e aplicando cache simplificado para otimizar chamadas repetidas.
-
-Este módulo coordena o fluxo de obtenção de informações cadastrais, fiscais e de endereço
-de empresas a partir de APIs públicas e comerciais, consolidando tudo em um formato único e estável
-para uso interno pela automação.
-
-Principais recursos:
-
-Gerencia múltiplas fontes de dados (ex.: CNPJá Pública e API Comercial IE).
-
-Padroniza os resultados em um dicionário com campos consistentes.
-
-Implementa cache básico do último CNPJ consultado, reduzindo chamadas redundantes.
-
-Inclui lógica de fallback e validações adicionais para Suframa e Inscrição Estadual.
-
-Ideal para ser utilizado por camadas superiores (ex.: motores de automação, validação de cadastros,
-ou integração com sistemas ERP) que necessitem de dados consolidados sem lidar diretamente com APIs externas.
+utilizando a API Comercial unificada (/office/) e escrevendo os dados
+no ficheiro de sessão JSON.
 """
 
 from typing import Dict, Any, List
-import re
-import time 
-
-# --- Imports ---
-from .api_cnpja_publica import consultar_cnpj as consultar_cnpj_publica
-from .api_cnpja_comercial_ie import consultar_ie_por_cnpj
-from configuracoes.carregar_config import API_CNPJ_SELECIONADA
 from uteis.extrator_json import extrair_dado_json
-from uteis.cores import VERDE, RESET
-
-
-# ============================================================
-# 🧠 Cache Simplificado
-# ============================================================
-_ultimo_cnpj_consultado: str = None
-_ultimo_resultado: Dict[str, Any] = None
-
-# ============================================================
-# 🔧 Funções Auxiliares
-# ============================================================
-def _limpar_cep(cep: str) -> str:
-    """Remove pontuação do CEP."""
-    return re.sub(r"[^\d]", "", str(cep))
-
-
-def _limpar_documento(doc: str) -> str:
-    """Remove pontuação de CPF/CNPJ."""
-    if not doc:
-        return ""
-    return re.sub(r"[^\d]", "", str(doc))
-
-
-def separar_tipo_logradouro(logradouro_completo: str):
-    """Divide o logradouro completo em tipo e nome."""
-    if not logradouro_completo:
-        return None, None
-    partes = logradouro_completo.strip().split(" ", 1)
-    return (partes[0], partes[1]) if len(partes) == 2 else (None, partes[0])
-
+from uteis.cores import VERDE, RESET, AMARELO
+from uteis.formatadores import limpar_documento, limpar_cep, separar_tipo_logradouro
+from servicos.api_cnpja_comercial_ie_simples import consultar_cnpj_completo
+from uteis.gestor_sessao import ler_dados_sessao, escrever_dados_sessao
 
 # ============================================================
 # 🚀 Função Principal
 # ============================================================
 def obter_dados_cnpj(cnpj: str) -> Dict[str, Any]:
     """
-    Obtém dados de um CNPJ, usando cache do último resultado e orquestrando APIs.
-    Retorna um dicionário padronizado.
+    Obtém dados de um CNPJ, usando o cache da sessão JSON e a API Comercial.
+    Escreve o resultado no dados_sessao.json e retorna o dicionário padronizado.
     """
-    global _ultimo_cnpj_consultado, _ultimo_resultado
+    
+    cnpj_chave = limpar_documento(cnpj)
 
-    cnpj_chave = _limpar_documento(cnpj)
-
-    # --- Verificação de Cache ---
-    if cnpj_chave == _ultimo_cnpj_consultado and _ultimo_resultado is not None:
-        return _ultimo_resultado
-    start_time = time.time()
+    # --- Verificação de Cache (Lendo do JSON) ---
+    dados_sessao_atuais = ler_dados_sessao()
+    if dados_sessao_atuais.get("documento_consultado") == cnpj_chave:
+        return dados_sessao_atuais
+    
 
     # --- Inicialização ---
+    # (Obtém o template VAZIO da sessão para preencher)
+    # (Isto garante que não estamos a misturar dados de um CNPJ antigo)
+    dados_padronizados = ler_dados_sessao() # <-- Começa com o template
+    
+    # (Mantém apenas os dados do template, limpa dados antigos se houver)
     dados_padronizados = {
-        "status_cnpj": "",
-        "razao_social": "",
-        "data_abertura": "",
-        "inscricao_estadual": "Isento",
-        "simples_nacional": None,
-        "suframa_valido": False,
-        "suframa_numero": "",
+        "status_cnpj": "", "razao_social": "", "data_abertura": "",
+        "inscricao_estadual": "Isento", "simples_nacional": None,
         "socios": [],
         "endereco": {
-            "tipo_logradouro": "",
-            "logradouro": "",
-            "numero": "",
-            "complemento": "",
-            "bairro": "",
-            "cep": "",
-            "cidade": "",
-            "estado": ""
-        }
+            "tipo_logradouro": "", "logradouro": "", "numero": "",
+            "complemento": "", "bairro": "", "cep": "",
+            "cidade": "", "estado": ""
+        },
+        "tipo_pessoa": dados_sessao_atuais.get("tipo_pessoa", 0) # Mantém o tipo_pessoa
     }
 
-    # ============================================================
-    # 🧩 Etapa 1 — Dados Gerais
-    # ============================================================
-    dados_gerais_brutos = {}
-    if API_CNPJ_SELECIONADA == 1:  # CNPJá Pública
-        try:
-            dados_gerais_brutos = consultar_cnpj_publica(cnpj_chave)
-        except Exception as e:
-                print(f"⚠️ Aviso: Falha ao obter dados gerais da API principal (CNPJá Pública): {e}")
-                # --- ADICIONAR ESTA LINHA ---
-                # Re-levanta a exceção para sinalizar a falha ao motor executor
-                raise e
-        try:
-            # Mapeamento principal
-            dados_padronizados["razao_social"] = extrair_dado_json(dados_gerais_brutos, "company.name")
-            dados_padronizados["data_abertura"] = extrair_dado_json(dados_gerais_brutos, "founded")
-            dados_padronizados["status_cnpj"] = extrair_dado_json(dados_gerais_brutos, "status.text")
-            dados_padronizados["simples_nacional"] = extrair_dado_json(
-                dados_gerais_brutos, "company.simples.optant", padrao=None
-            )
-
-            # Endereço
-            logradouro_completo = extrair_dado_json(dados_gerais_brutos, "address.street")
-            tipo_log, nome_log = separar_tipo_logradouro(logradouro_completo)
-            endereco = dados_padronizados["endereco"]
-            endereco["tipo_logradouro"] = tipo_log or ""
-            endereco["logradouro"] = nome_log or ""
-            endereco["numero"] = extrair_dado_json(dados_gerais_brutos, "address.number")
-            endereco["complemento"] = extrair_dado_json(dados_gerais_brutos, "address.details")
-            endereco["bairro"] = extrair_dado_json(dados_gerais_brutos, "address.district")
-            endereco["cep"] = _limpar_cep(extrair_dado_json(dados_gerais_brutos, "address.zip"))
-            endereco["cidade"] = extrair_dado_json(dados_gerais_brutos, "address.city")
-            endereco["estado"] = extrair_dado_json(dados_gerais_brutos, "address.state")
-
-            # Sócios
-            socios_brutos = dados_gerais_brutos.get("company", {}).get("members", [])
-            dados_padronizados["socios"] = [m["person"]["name"] for m in socios_brutos]
-        except Exception as e:
-            print(f"⚠️ Aviso: Falha ao obter dados gerais da API principal (CNPJá Pública): {e}")
 
     # ============================================================
-    # 🔎 Etapa 2 — Suframa
+    # 🧩 Etapa 1 — Consulta Unificada
     # ============================================================
+    dados_brutos = {} # O JSON que vem da API
     try:
-        suframa_lista = extrair_dado_json(dados_gerais_brutos, "suframa", padrao=[])
-        if suframa_lista: # Procede somente se a lista não for vazia
-            primeiro_suframa = suframa_lista[0] # Pega o primeiro registro
-            suframa_aprovado = extrair_dado_json(primeiro_suframa, "approved", padrao=False)
-            suframa_numero = extrair_dado_json(primeiro_suframa, "number", padrao="")
-            if suframa_aprovado and suframa_numero:
-                dados_padronizados["suframa_valido"] = True
-                dados_padronizados["suframa_numero"] = suframa_numero
-        else:
-            dados_padronizados["suframa_valido"] = False
-            dados_padronizados["suframa_numero"] = ""
-
+        dados_brutos = consultar_cnpj_completo(cnpj_chave)
+        
     except Exception as e:
-        # Em caso de erro inesperado ao processar Suframa
-        print(f"⚠️ Aviso: Falha ao processar dados de Suframa: {e}")
-        dados_padronizados["suframa_valido"] = False
-        dados_padronizados["suframa_numero"] = ""
+        print(f"⚠️ Aviso: Falha crítica ao consultar a API Comercial (/office/): {e}")
+        raise e
 
     # ============================================================
-    # 🧩 Etapa 3 — Inscrição Estadual
+    # 🧩 Etapa 2 — Mapeamento dos Dados Cadastrais
     # ============================================================
     try:
-        dados_ie_brutos = consultar_ie_por_cnpj(cnpj_chave)
+        dados_padronizados["razao_social"] = extrair_dado_json(dados_brutos, "company.name")
+        dados_padronizados["data_abertura"] = extrair_dado_json(dados_brutos, "founded")
+        dados_padronizados["status_cnpj"] = extrair_dado_json(dados_brutos, "status.text")
+        dados_padronizados["simples_nacional"] = extrair_dado_json(
+            dados_brutos, "company.simples.optant", padrao=None
+        )
+
+        # Endereço
+        logradouro_completo = extrair_dado_json(dados_brutos, "address.street")
+        tipo_log, nome_log = separar_tipo_logradouro(logradouro_completo)
+        endereco = dados_padronizados["endereco"]
+        endereco["tipo_logradouro"] = tipo_log or ""
+        endereco["logradouro"] = nome_log or ""
+        endereco["numero"] = extrair_dado_json(dados_brutos, "address.number")
+        endereco["complemento"] = extrair_dado_json(dados_brutos, "address.details")
+        endereco["bairro"] = extrair_dado_json(dados_brutos, "address.district")
+        endereco["cep"] = limpar_cep(extrair_dado_json(dados_brutos, "address.zip"))
+        endereco["cidade"] = extrair_dado_json(dados_brutos, "address.city")
+        endereco["estado"] = extrair_dado_json(dados_brutos, "address.state")
+
+        # Sócios
+        socios_brutos = dados_brutos.get("company", {}).get("members", [])
+        dados_padronizados["socios"] = [m["person"]["name"] for m in socios_brutos]
+    except Exception as e:
+        print(f"⚠️ Aviso: Falha ao mapear dados cadastrais (Razão, Endereço, Sócios): {e}")
+    
+    # ============================================================
+    # 🧩 Etapa 3 — [REGRA: CANDIDATO A SUFRAMA]
+    # ============================================================
+    try:
+        uf = dados_padronizados["endereco"].get("estado", "").upper()
+        cidade = dados_padronizados["endereco"].get("cidade", "").strip().lower()
+        status_cnpj = (dados_padronizados.get("status_cnpj") or "").lower()
+
+        estados_suframa = {"AM", "AC", "AP", "RO", "RR"}
+        municipios_alc = {
+            "cruzeiro do sul", "epitaciolandia", "brasileia",
+            "macapa", "santana", "guajara-mirim", "boa vista", "bonfim", "tabatinga"
+        }
+        cnaes_candidatos = [
+            "comércio", "industr", "import", "export", "transformação", "produção"
+        ]
+        cnae_texto = (dados_brutos.get("mainActivity", {}).get("text", "") or "").lower()
+
+        if (
+            status_cnpj == "ativa"
+            and uf in estados_suframa
+            and (
+                any(palavra in cnae_texto for palavra in cnaes_candidatos)
+                or cidade in municipios_alc
+            )
+        ):
+            print(f"\n{AMARELO}🚩 Possível empresa com benefício SUFRAMA detectada.{RESET}")
+            print(f"{AMARELO}→ {dados_padronizados['razao_social']} ({uf} - {cidade.title()}){RESET}")
+            print(f"{AMARELO}⚠️ Interrompendo o fluxo para verificação manual da inscrição SUFRAMA.{RESET}\n")
+            input("Pressione ENTER para continuar após verificar manualmente no site da SUFRAMA...")
+    except Exception as e:
+        print(f"⚠️ Falha ao avaliar regra SUFRAMA: {e}")
+
+    # ============================================================
+    # 🧩 Etapa 4 — Mapeamento da Inscrição Estadual
+    # ============================================================
+    try:
         estado_empresa = dados_padronizados["endereco"]["estado"]
         inscricao_estadual_valida = "Isento"
-        registrations: List[Dict] = extrair_dado_json(dados_ie_brutos, "registrations", padrao=[])
+        registrations: List[Dict] = extrair_dado_json(dados_brutos, "registrations", padrao=[])
+        
         if estado_empresa:
             for registro in registrations:
                 ie_numero = extrair_dado_json(registro, "number")
@@ -180,56 +139,63 @@ def obter_dados_cnpj(cnpj: str) -> Dict[str, Any]:
                 ie_ativa = extrair_dado_json(registro, "enabled", padrao=False)
 
                 if ie_numero and ie_estado and ie_ativa and ie_estado.upper() == estado_empresa.upper():
-                    print(f"     -> da encontrada: {VERDE}{ie_numero}/{ie_estado} (Ativa){RESET}")
+                    print(f"     -> IE encontrada: {VERDE}{ie_numero}/{ie_estado} (Ativa){RESET}")
                     inscricao_estadual_valida = ie_numero
                     break
-                elif ie_numero and ie_estado:
-                    if not ie_ativa:
-                        print(f"     -> IE {ie_numero}/{ie_estado} ignorada (inativa).")
-                    elif ie_estado.upper() != estado_empresa.upper():
-                        print(f"     -> IE {ie_numero}/{ie_estado} ignorada (estado diferente de {estado_empresa}).")
-                    else:
-                        print(f"     -> IE {ie_numero}/{ie_estado} ignorada (dados incompletos).")
         else:
             print("   - Não foi possível validar a IE (estado da empresa não encontrado nos dados gerais).")
 
         dados_padronizados["inscricao_estadual"] = inscricao_estadual_valida
 
     except Exception as e:
-        print(f"⚠️ Aviso: falha ao consultar inscrição estadual: {e}")
+        print(f"⚠️ Aviso: falha ao mapear inscrição estadual: {e}")
 
 
     # ============================================================
-    # 🕒 Finalização
+    # 🕒 Finalização (ESCREVENDO NO JSON)
     # ============================================================
-    end_time = time.time()
-    print(f"   - Consultas APIs concluídas em {end_time - start_time:.2f} segundos.")
-
-    _ultimo_cnpj_consultado = cnpj_chave
-    _ultimo_resultado = dados_padronizados
-
+    # (Adiciona o CNPJ consultado para a verificação de cache)
+    dados_padronizados["documento_consultado"] = cnpj_chave
+    escrever_dados_sessao(dados_padronizados) 
     return dados_padronizados
+
+
 # ============================================================
 # 🧪 Bloco de Teste Direto
 # ============================================================
 if __name__ == "__main__":
     """
-    Bloco para testar a função de consulta unificada.
+    Bloco para testar a função de consulta unificada (VERSÃO COMERCIAL).
     Execute a partir da raiz: python -m servicos.consulta_cnpj
     """
     import sys
     from pathlib import Path
     import json
+    # (Importa o gestor de sessão para o teste)
+    from uteis.gestor_sessao import iniciar_sessao, ler_dados_sessao, encerrar_sessao
 
     sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-    CNPJ_TESTE = "04143008002705"
+    CNPJ_TESTE = "04143008002705" # CNPJ com dados completos
+    
+    # Inicia a sessão (cria o JSON)
+    iniciar_sessao()
 
-    print(f">>> Iniciando teste da função 'obter_dados_cnpj' com CNPJ: {CNPJ_TESTE}...")
+    print(f">>> Iniciando teste da função 'obter_dados_cnpj' (Nova Versão JSON) com CNPJ: {CNPJ_TESTE}...")
     try:
         resultado_padronizado = obter_dados_cnpj(CNPJ_TESTE)
         print("\n--- Teste concluído com SUCESSO! ---")
-        print("--- Resultado Padronizado: ---")
+        print("--- Resultado Padronizado (Mapeado): ---")
         print(json.dumps(resultado_padronizado, indent=2, ensure_ascii=False))
+
+        print("\n--- Teste da função 'ler_dados_sessao' ---")
+        dados_do_json = ler_dados_sessao()
+        socios_do_cache = dados_do_json.get("socios")
+        print(f"Sócios obtidos do JSON: {socios_do_cache}")
+
     except Exception as e:
-        print(f"\n--- Teste FALHOU! Erro: {e} ---")
+        print(f"\n--- Teste FALHOU! Erro: {e}")
+    
+    finally:
+        # Limpa o JSON no final do teste
+        encerrar_sessao()

@@ -6,7 +6,7 @@ import time
 
 # Importa a nossa ferramenta de baixo nível para clicar.
 from funcoes.clicar_elemento import clicar_elemento
-# Importa o motor executor.
+# Importa o Assistente executor executor.
 from assistente.executor import executar_acao_assistida
 
 
@@ -14,12 +14,12 @@ def ir_para_aba(nome_da_aba: str):
     """Navega para qualquer aba especificada, clicando em seu ícone.
 
     Esta função constrói a chave do elemento dinamicamente (ex: 'aba_geral')
-    e passa a ação de clique para o motor de execução assistida.
+    e passa a ação de clique para o Assistente executor de execução assistida.
 
     Args:
         nome_da_aba (str): O nome da aba para a qual navegar (ex: 'geral', 'socios').
     """
-    # Constrói o nome da chave do JSON dinamicamente, seguindo nosso padrão.
+    # Constrói o nome da chave do JSON dinamicamente, seguindo padrão de nomeclatura dos arquivos de imagem.
     chave_da_aba = f"aba_{nome_da_aba}"
 
     # A docstring da ação será a própria chave, tornando o log do 'assistente.executor' claro.

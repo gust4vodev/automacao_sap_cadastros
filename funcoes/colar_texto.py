@@ -79,7 +79,7 @@ if __name__ == '__main__':
     time.sleep(5)
 
     try:
-        # --- Teste com os dados fornecidos ---
+        # --- Teste ---
         chave_teste = "geral3_codigo"
         valor_teste = "0123456789"
 

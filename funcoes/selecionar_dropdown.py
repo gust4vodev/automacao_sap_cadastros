@@ -74,7 +74,7 @@ if __name__ == '__main__':
     time.sleep(5)
 
     try:
-        # --- Teste com os dados fornecidos ---
+        # --- Teste ---
         chave_teste = "geral1_tipopn.png"
         valor_teste = "Cliente"
 
