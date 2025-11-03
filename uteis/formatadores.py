@@ -7,6 +7,10 @@ Módulo com funções auxiliares para formatação e limpeza de dados.
 import re
 import pandas as pd
 
+#=========================================================================
+#--- servicos/api_cnpja_comercial_ie_simples.py / ---
+#=========================================================================
+
 def limpar_documento(doc: str) -> str:
     """Remove pontuação e caracteres não numéricos de CPF/CNPJ."""
     # Retorna uma string vazia se a entrada for None ou vazia
@@ -15,6 +19,20 @@ def limpar_documento(doc: str) -> str:
     # Usa expressão regular para encontrar e remover tudo que NÃO for dígito (\d)
     return re.sub(r'[^\d]', '', str(doc))
 
+def limpar_cep(cep: str) -> str:
+    """Remove pontuação do CEP."""
+    return re.sub(r"[^\d]", "", str(cep))
+
+def separar_tipo_logradouro(logradouro_completo: str):
+    """Divide o logradouro completo em tipo e nome."""
+    if not logradouro_completo:
+        return None, None
+    partes = logradouro_completo.strip().split(" ", 1)
+    return (partes[0], partes[1]) if len(partes) == 2 else (None, partes[0])
+
+#=========================================================================
+#--- acoes/processar_endereco_faturamento.py / ---
+#=========================================================================
 
 def formatar_endereco_para_api(linha_endereco: pd.Series) -> str:
     """
@@ -53,15 +71,67 @@ def formatar_endereco_para_api(linha_endereco: pd.Series) -> str:
         # 5. Junta as partes válidas com ", "
         #    Este método garante que não haverá vírgulas duplicadas.
         endereco_formatado = ", ".join(partes_validas)
-
-        print(f"       - Endereço formatado para API: {endereco_formatado}")
         return endereco_formatado
 
     except KeyError as ke:
             raise KeyError(f"Coluna de endereço essencial não encontrada ao formatar para API: {ke}")
     except Exception as e:
             raise RuntimeError(f"Erro ao formatar endereço para API: {e}")
-    
+
+#=========================================================================
+#--- uteis\extrator_documento_tela.py / ---
+#=========================================================================
+
+def contar_caracteres(texto: str | int) -> int:
+    """
+    Conta e retorna o número total de caracteres em um texto.
+
+    Args:
+        texto (str | int): O texto (ou número) cuja quantidade de caracteres será contada.
+            Caso um número seja informado, ele será convertido automaticamente para string.
+
+    Returns:
+        int: A quantidade de caracteres presentes no texto convertido.
+
+    Exemplo:
+        >>> contar_caracteres("Gustavo")
+        7
+        >>> contar_caracteres(12345)
+        5
+    """
+    # Garante que o valor seja tratado como string antes de contar
+    texto_str = str(texto)
+    quantidade_caracteres = len(texto_str)
+    return quantidade_caracteres
+
+def validar_tamanho_documento(valor: str | int, tamanho_esperado: int) -> bool:
+    """
+    Valida se o valor informado, após limpeza, possui a quantidade de caracteres esperada.
+
+    A função utiliza `limpar_documento` para remover pontos, traços, espaços e outros caracteres
+    não numéricos antes de contar.
+
+    Args:
+        valor (str | int): O texto ou número que será validado.
+        tamanho_esperado (int): A quantidade de caracteres que o valor deve ter após a limpeza.
+
+    Returns:
+        bool: True se o valor limpo possuir exatamente o tamanho esperado, False caso contrário.
+
+    Exemplo:
+        >>> validar_tamanho_documento("12.345.678/0001-99", 14)
+        True
+        >>> validar_tamanho_documento("123.456.789-00", 14)
+        False
+    """
+    try:
+        valor_limpo = limpar_documento(valor)
+        quantidade = contar_caracteres(valor_limpo)
+        return quantidade == tamanho_esperado
+    except Exception as e:
+        print(f"⚠️ Erro ao validar documento: {e}")
+        return False
+
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':
     """

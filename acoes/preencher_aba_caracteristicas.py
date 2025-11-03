@@ -1,7 +1,7 @@
 # acoes/preencher_aba_caracteristicas.py
 
 """
-Módulo para a "parede" de ações: preenchimento da aba Características.
+Módulo para a ação de ações: preenchimento da aba Características.
 """
 
 import time
@@ -68,7 +68,7 @@ def preencher_aba_caracteristicas():
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':
     """
-    Bloco para testar esta "parede" de forma isolada.
+    Bloco para testar esta ação de forma isolada.
     Execute-o a partir da raiz do projeto com: python -m acoes.preencher_aba_caracteristicas
     """
     import sys
@@ -77,16 +77,16 @@ if __name__ == '__main__':
 
     from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 
-    print(">>> Iniciando teste da 'parede': preencher_aba_caracteristicas...")
+    print(">>> Iniciando teste da ação: preencher_aba_caracteristicas...")
     print(">>> Testando o fluxo COMPLETO (Passos 1 a 6)...")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
         preencher_aba_caracteristicas()
-        print("\n--- Teste da 'parede' concluído com SUCESSO! ---")
+        print("\n--- Teste da ação concluído com SUCESSO! ---")
 
     except AutomacaoAbortadaPeloUsuario:
         print("\n--- Teste ABORTADO pelo usuário. ---")
     except Exception as e:
-        print(f"\n--- Teste da 'parede' FALHOU! Erro: {e} ---")
+        print(f"\n--- Teste da ação FALHOU! Erro: {e} ---")

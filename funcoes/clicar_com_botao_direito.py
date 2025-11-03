@@ -69,9 +69,7 @@ if __name__ == '__main__':
     time.sleep(5)
 
     try:
-        # --- Teste com os dados fornecidos ---
-        # Você mencionou que precisamos testar o ponto exato de clique.
-        # Comece com ajustes pequenos e vá aumentando.
+        # --- Teste ---
         chave_teste = "caracteristicas_logmodif"
         ajuste_x_teste = -50  # Mude aqui para testar (para direita)
         ajuste_y_teste = 30  # Mude aqui para testar (para baixo)

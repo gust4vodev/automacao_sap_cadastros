@@ -23,6 +23,7 @@ CNPJA_API_URL_COMERCIAL_IE = os.getenv("CNPJA_API_URL_COMERCIAL_IE") # Consulta 
 
 # Chave de autenticação para o endpoint comercial (/ccc)
 CNPJA_API_KEY_COMERCIAL = os.getenv("CNPJA_API_KEY_COMERCIAL")
+CNPJA_API_URL_COMERCIAL_IE_SIMPLES = os.getenv("CNPJA_API_URL_COMERCIAL_IE_SIMPLES")
 
 # ⚙️ Seleção da API principal de CNPJ
 # Define qual API será usada como fonte primária de dados.

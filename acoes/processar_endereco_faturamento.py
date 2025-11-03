@@ -43,7 +43,7 @@ def processar_endereco_faturamento():
     try:
         validar_tabela_endereco(df_endereco)
     except ValueError as val_err:
-         raise val_err # Re-levanta para o motor executor
+         raise val_err # Re-levanta para o Assistente executor executor
 
 
     # ============================================================
@@ -88,7 +88,7 @@ def processar_endereco_faturamento():
             
 
             # 1. Cria as strings formatadas (com vírgula)
-            #    Usamos :.5f para garantir que valores como ,7791 sejam impressos como ,77910
+            # :.5f para garantir que valores como ,7791 sejam impressos como ,77910
             lat_formatada = f"{lat_truncada:.5f}".replace('.', ',')
             lon_formatada = f"{lon_truncada:.5f}".replace('.', ',')
 
@@ -96,9 +96,6 @@ def processar_endereco_faturamento():
         df_endereco.loc[0, 'Latitude'] = lat_truncada
         df_endereco.loc[0, 'Longitude'] = lon_truncada
 
-        # 3. O print usa as strings formatadas (com 5 casas)
-        print(f"     ✅ DataFrame atualizado: Lat='{lat_formatada}', Lon='{lon_formatada}'")
-        
     except Exception as e:
             raise RuntimeError(f"Erro ao atualizar DataFrame com coordenadas: {e}")
     
@@ -106,7 +103,6 @@ def processar_endereco_faturamento():
     # ============================================================
     # Passo 7: Reformatar DataFrame para String Tabulada
     # ============================================================
-    print("   - Convertendo tabela atualizada de volta para formato de clipboard...")
     try:
         tabela_formatada_string: str = executar_acao_assistida(lambda: converter_dataframe_para_string_tabulada(df_endereco), nome_acao="Formatar tabela de endereço para área de transferência")
         if not tabela_formatada_string:
@@ -114,17 +110,15 @@ def processar_endereco_faturamento():
     except Exception as e:
         erro_msg = f"Erro ao reformatar a tabela para colar: {e}"
         print(f"    {VERMELHO}❌ ERRO: {erro_msg}{RESET}")
-        raise RuntimeError(erro_msg) # Levanta erro para o motor
+        raise RuntimeError(erro_msg) # Levanta erro para o Assistente executor
     
 
     # ============================================================
     # Passo 8: Colar Tabela de Volta no SAP
     # ============================================================
-    print("   - Preparando para colar a tabela no SAP...")
     try:
         pyperclip.copy(tabela_formatada_string)
         time.sleep(0.3)
-        print("    - Tabela copiada para clipboard.")
         executar_acao_assistida(lambda: clicar_elemento("enderecos_idfaturamento"), nome_acao="Clicar na área da tabela para colar")
         time.sleep(0.5)
         executar_acao_assistida(lambda: pressionar_atalho_combinado('ctrl', 'v'), nome_acao="Colar tabela atualizada (Ctrl+V)")
@@ -137,13 +131,12 @@ def processar_endereco_faturamento():
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':
-    # ... (imports sys, Path, excecoes) ...
     import sys
     from pathlib import Path
     sys.path.append(str(Path(__file__).resolve().parent.parent))
     from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 
-    print(">>> Iniciando teste da 'parede': processar_endereco_faturamento...")
+    print(">>> Iniciando teste da ação: processar_endereco_faturamento...")
     print(">>> Testando Passos 1 a 3 (Copiar, Ler, Validar)...")
     print(">>> Certifique-se de que a âncora 'enderecos_tabela' esteja visível.")
     print(">>> O teste começará em 5 segundos...")
@@ -151,9 +144,9 @@ if __name__ == '__main__':
 
     try:
         processar_endereco_faturamento()
-        print("\n--- Teste da 'parede' (Passos 1 a 3) concluído com SUCESSO! ---")
+        print("\n--- Teste da ação (Passos 1 a 3) concluído com SUCESSO! ---")
 
     except AutomacaoAbortadaPeloUsuario:
         print("\n--- Teste ABORTADO pelo usuário. ---")
     except Exception as e:
-        print(f"\n--- Teste da 'parede' FALHOU! Erro: {e} ---")
+        print(f"\n--- Teste da ação FALHOU! Erro: {e} ---")

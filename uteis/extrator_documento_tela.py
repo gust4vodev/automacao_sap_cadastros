@@ -8,78 +8,56 @@ o documento CNPJ ou CPF da tela, com lógica de fallback e retentativas.
 import time
 
 # --- Imports de Ferramentas e Assistente ---
+from uteis.formatadores import limpar_documento, validar_tamanho_documento
 from funcoes.copiar_texto_elemento import copiar_texto_elemento
-from assistente.executor import executar_acao_assistida
-from uteis.cores import VERDE, VERMELHO, RESET # Para logs de erro internos
+from uteis.cores import VERDE, VERMELHO, RESET, AMARELO # (Adicionado AMARELO)
 
 
-def obter_documento_tela_com_fallback() -> str:
+def scraping_cnpj_cpf():
     """
-    Tenta obter CNPJ ou CPF da tela, com 3 tentativas gerais.
+    Captura automaticamente o CNPJ ou CPF da tela, alternando entre as duas opções.
+    Realiza até 3 tentativas automáticas intercaladas (CNPJ/CPF).
+    Caso não consiga identificar nenhum documento válido, solicita ao usuário inserir manualmente.
 
-    Ordem de tentativa: CNPJ -> CPF.
-    Cada tentativa de cópia individual é gerenciada pelo motor executor.
-
-    Returns:
-        str: O documento (CNPJ ou CPF) encontrado e copiado.
-
-    Raises:
-        ValueError: Se nenhum documento puder ser obtido após 3 tentativas gerais.
-        Exception: Propaga exceções do motor se o usuário abortar.
+    Retorna:
+        str: Documento limpo (CNPJ com 14 dígitos ou CPF com 11 dígitos).
     """
-    documento_encontrado = ""
-
-    # 1. Inicia loop de 3 tentativas gerais para obter CNPJ ou CPF da tela. 
-    for tentativa_geral in range(1, 4): 
-
-    # 2. Tenta copiar CNPJ via `copiar_texto_elemento` com `executar_acao_assistida`.
+    
+    for tentativa in range(1, 4):
+        # --- Tenta capturar CNPJ ---
         try:
-            doc = executar_acao_assistida(lambda: copiar_texto_elemento("endereco_idfiscais_cnpj"),nome_acao=f"[Tentativa {tentativa_geral}] Copiar CNPJ")
+            valor_copiado = copiar_texto_elemento("endereco_idfiscais_cnpj")
+            if valor_copiado and validar_tamanho_documento(valor_copiado, 14):
+                doc_limpo = limpar_documento(valor_copiado)
+                print(f"   ✅ CNPJ detectado ({valor_copiado}).")
+                return doc_limpo
+            
+        except Exception as e_cnpj:
+            print(f"   {AMARELO}⚠️  Âncora CNPJ não encontrada. Tentando CPF...{RESET}")
+        
+        # --- Tenta capturar CPF ---
+        try:
+            time.sleep(1)
+            valor_copiado_cpf = copiar_texto_elemento("endereco_idfiscais_cpf")
+            if valor_copiado_cpf and validar_tamanho_documento(valor_copiado_cpf, 11):
+                doc_limpo = limpar_documento(valor_copiado_cpf)
+                print(f"   ✅ CPF detectado ({valor_copiado_cpf}).")
+                return doc_limpo
+        except Exception as e_cpf:
+            print(f"   {AMARELO}⚠️  Âncora CPF não encontrada.{RESET}")
 
-    # 3. Se CNPJ for obtido e válido, armazena e interrompe o loop. 
-            if doc:
-                documento_encontrado = doc
-                break # Sucesso, sai do loop for
-        except Exception as e_cnpj: # Não relança o erro aqui, permite tentar o CPF
-            print(f"   {VERMELHO}- Falha crítica ao tentar obter CNPJ (detalhe: {e_cnpj}). Tentando CPF...{RESET}")
-
-
-    # 4. Em caso de falha no CNPJ, tenta copiar CPF da mesma forma. 
-        if not documento_encontrado:
-
-    # 5. Se CPF for obtido e válido, armazena e interrompe o loop.        
-            try:
-                doc = executar_acao_assistida(lambda: copiar_texto_elemento("endereco_idfiscais_cpf"), nome_acao=f"[Tentativa {tentativa_geral}] Copiar CPF")
-                if doc:
-                     documento_encontrado = doc
-                     break # Sucesso, sai do loop for
-                
-    # 6. Registra falha crítica com cor vermelha se ambas as tentativas falharem.             
-            except Exception as e_cpf: # Não relança, permite próxima tentativa geral
-                print(f"   {VERMELHO}- Falha crítica ao tentar obter CPF (detalhe: {e_cpf}).{RESET}")
-                
-        # Se encontrou documento (CNPJ ou CPF), sai do loop
-        if documento_encontrado:
-            break
-
-    # 7. Se não encontrou, imprime aviso e continua para próxima tentativa geral
-        print(f"   - Nenhum documento encontrado na Tentativa Geral {tentativa_geral}.")
-        if tentativa_geral < 3:
-            time.sleep(1) # Pausa antes da próxima tentativa geral
-
-    # 8. Após 3 tentativas sem sucesso, levanta `ValueError`. 
-    if not documento_encontrado:
-        raise ValueError("Não foi possível obter CNPJ ou CPF da tela após 3 tentativas gerais.")
-
-    # 9. Ao obter documento, exibe com cor verde e retorna o valor.  
-    print(f"   - Documento obtido da tela: '{VERDE}{documento_encontrado}{RESET}'.")
-    return documento_encontrado
+        time.sleep(1)
+    # --- Se nenhuma tentativa automática funcionou, aciona input manual ---
+    print(f"{VERMELHO}⚠️  Não foi possível capturar automaticamente o CNPJ/CPF após 3 tentativas.{RESET}")
+    print(f"{VERMELHO}⚠️  Preencha o valor em sistema e...{RESET}")
+    doc_manual = input("    → Informe manualmente o documento e pressione Enter: ")
+    return limpar_documento(doc_manual)
 
 
-# --- Camada de Teste Direto ---
+# --- Camada de Teste Direto (CORRIGIDA) ---
 if __name__ == '__main__':
     """
-    Bloco para testar a função 'obter_documento_tela_com_fallback'.
+    Bloco para testar a função 'scraping_cnpj_cpf'.
     Execute a partir da raiz: python -m uteis.extrator_documento_tela
     """
     import sys
@@ -88,13 +66,13 @@ if __name__ == '__main__':
 
     from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 
-    print(">>> Iniciando teste da função 'obter_documento_tela_com_fallback'...")
+    print(">>> Iniciando teste da função 'scraping_cnpj_cpf'...") # (Nome corrigido)
     print(">>> Deixe as imagens de CNPJ e CPF visíveis na tela.")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(5)
 
     try:
-        documento = obter_documento_tela_com_fallback()
+        documento = scraping_cnpj_cpf() # (Nome corrigido)
         print("\n--- Teste concluído com SUCESSO! ---")
         print(f"--- Documento obtido: {documento}")
 

@@ -74,7 +74,7 @@ def preencher_aba_exepgto(divisao_pn: int):
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':
     """
-    Bloco para testar esta "parede" de forma isolada.
+    Bloco para testar esta ação de forma isolada.
     Execute-o a partir da raiz do projeto com: python -m acoes.preencher_aba_exepgto
     """
     import sys
@@ -83,16 +83,16 @@ if __name__ == '__main__':
 
     from assistente.excecoes import AutomacaoAbortadaPeloUsuario
 
-    print(">>> Iniciando teste da 'parede': preencher_aba_exepgto...")
+    print(">>> Iniciando teste da ação: preencher_aba_exepgto...")
     print(">>> Testando o fluxo COMPLETO (Passos 1 a 6)...")
     print(">>> O teste começará em 5 segundos...")
     time.sleep(1)
 
     try:
         preencher_aba_exepgto(2)
-        print("\n--- Teste da 'parede' (Passos 1 a 6) concluído com SUCESSO! ---")
+        print("\n--- Teste da ação (Passos 1 a 6) concluído com SUCESSO! ---")
 
     except AutomacaoAbortadaPeloUsuario:
         print("\n--- Teste ABORTADO pelo usuário. ---")
     except Exception as e:
-        print(f"\n--- Teste da 'parede' FALHOU! Erro: {e} ---")
+        print(f"\n--- Teste da ação FALHOU! Erro: {e} ---")
