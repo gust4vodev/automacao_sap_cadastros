@@ -96,4 +96,5 @@ automacao_sap_b1
 -- temp/              (Pasta temporária onde o "Cérebro" (JSON) é guardado)
 
 -- parametros.json    (Os "Olhos": Onde estão as imagens (âncoras)?)
+
 -- main.py            (O "Maestro": O orquestrador que chama as "paredes" na ordem correta)
