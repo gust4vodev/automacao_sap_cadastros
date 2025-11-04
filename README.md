@@ -77,23 +77,23 @@ O robô não apenas move dados; ele toma decisões de negócio que implementámo
 
 Este é um mapa simples do projeto, focado nos "porquês" de cada pasta.
 
-/automacao_sap_b1/
-|
-|-- acoes/             (As "Paredes": O que fazer? Etapas de negócio)
-|
-|-- assistente/        (O "Motor": A lógica de Retentativas e Menu de Falha)
-|
-|-- configuracoes/     (Carrega as chaves do ficheiro .env)
-|
-|-- funcoes/           (As "Ferramentas": Como fazer? (ex: clicar, digitar))
-|
-|-- servicos/          (As "Fontes de Dados": Onde buscar informação? (APIs))
-|
-|-- uteis/             (Lógica Pura: Funções que não tocam na tela (ex: formatar, gerir o JSON))
-|
-|-- validacoes/        (O "Check-in": O que verificar antes de começar?)
-|
-|-- temp/              (Pasta temporária onde o "Cérebro" (JSON) é guardado)
-|
-|-- parametros.json    (Os "Olhos": Onde estão as imagens (âncoras)?)
-|-- main.py            (O "Maestro": O orquestrador que chama as "paredes" na ordem correta)
+automacao_sap_b1
+
+-- acoes/             (As "Paredes": O que fazer? Etapas de negócio)
+
+-- assistente/        (O "Motor": A lógica de Retentativas e Menu de Falha)
+
+-- configuracoes/     (Carrega as chaves do ficheiro .env)
+
+-- funcoes/           (As "Ferramentas": Como fazer? (ex: clicar, digitar))
+
+-- servicos/          (As "Fontes de Dados": Onde buscar informação? (APIs))
+
+-- uteis/             (Lógica Pura: Funções que não tocam na tela (ex: formatar, gerir o JSON))
+
+-- validacoes/        (O "Check-in": O que verificar antes de começar?)
+
+-- temp/              (Pasta temporária onde o "Cérebro" (JSON) é guardado)
+
+-- parametros.json    (Os "Olhos": Onde estão as imagens (âncoras)?)
+-- main.py            (O "Maestro": O orquestrador que chama as "paredes" na ordem correta)
