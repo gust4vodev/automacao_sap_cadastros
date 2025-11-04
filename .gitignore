@@ -17,4 +17,4 @@ logs/*.log
 .idea/
 
 # Arquivo de vendedores Pet
-.vendedores_pet7.json
+vendedores_pet7.json
