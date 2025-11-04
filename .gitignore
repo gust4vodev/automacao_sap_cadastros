@@ -16,5 +16,5 @@ logs/*.log
 .vscode/
 .idea/
 
-# Imagens de automação (específicas do ambiente)
-imagens/
+# Arquivo de vendedores Pet
+.vendedores_pet7.json

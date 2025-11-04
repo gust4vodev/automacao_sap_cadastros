@@ -127,7 +127,7 @@ def processar_endereco_faturamento():
         time.sleep(1)
     except Exception as e:
         raise RuntimeError(f"Erro ao colar a tabela de volta no SAP: {e}")
-
+    time.sleep(3)
 
 # --- Camada de Teste Direto ---
 if __name__ == '__main__':

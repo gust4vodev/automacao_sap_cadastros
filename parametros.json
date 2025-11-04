@@ -9,11 +9,6 @@
     "ajuste_x": "",
     "ajuste_y": ""
   },
-  "pet7_folha": {
-    "path": "imagens/pet7_folha.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
   "aba_enderecos": {
     "path": "imagens/aba_enderecos.png",
     "ajuste_x": "",
@@ -181,16 +176,11 @@
   },
   "geral2_tipo_pessoa": {
     "path": "imagens/geral2_tipo_pessoa.png",
-    "ajuste_x": "",
+    "ajuste_x": "200",
     "ajuste_y": ""
   },
   "pessoascontato_novosocio": {
     "path": "imagens/pessoascontato_novosocio.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "geral2_celular": {
-    "path": "imagens/geral2_celular.png",
     "ajuste_x": "",
     "ajuste_y": ""
   },
@@ -201,17 +191,12 @@
   },
   "geral2_data_abertura": {
     "path": "imagens/geral2_data_abertura.png",
-    "ajuste_x": "",
+    "ajuste_x": "200",
     "ajuste_y": ""
   },
   "geral2_indicador_ie": {
     "path": "imagens/geral2_indicador_ie.png",
-    "ajuste_x": "",
-    "ajuste_y": ""
-  },
-  "geral2_ddd": {
-    "path": "imagens/geral2_ddd.png",
-    "ajuste_x": "",
+    "ajuste_x": "200",
     "ajuste_y": ""
   },
   "pessoascontato_socio_sim": {
@@ -221,11 +206,21 @@
   },
   "geral2_op_consumidor": {
     "path": "imagens/geral2_op_consumidor.png",
-    "ajuste_x": "",
+    "ajuste_x": "200",
     "ajuste_y": ""
   },
   "pessoascontato_idsocio": {
     "path": "imagens/pessoascontato_idsocio.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral3_ddd": {
+    "path": "imagens/geral3_ddd.png",
+    "ajuste_x": "",
+    "ajuste_y": ""
+  },
+  "geral3_celular": {
+    "path": "imagens/geral3_celular.png",
     "ajuste_x": "",
     "ajuste_y": ""
   }

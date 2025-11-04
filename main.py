@@ -5,7 +5,6 @@ Ponto de entrada principal da aplicação de automação SAP B1.
 (Refatorado para arquitetura de Sessão JSON)
 """
 
-# --- Imports ---
 from validacoes.verificacoes_iniciais import executar_verificacoes_iniciais
 from assistente.executor import executar_acao_assistida
 from assistente.excecoes import AutomacaoAbortadaPeloUsuario
@@ -13,12 +12,11 @@ from uteis.cores import AMARELO, VERMELHO, RESET
 from acoes.preencher_aba_geral1 import processar_aba_geral_parte1
 from acoes.preencher_aba_caracteristicas import preencher_aba_caracteristicas
 from acoes.preencher_aba_exepgto import preencher_aba_exepgto
-# (condicoespgto está comentado, mantido)
-# from acoes.preencher_aba_condicoespgto import preencher_aba_condicoespgto
 from acoes.preencher_aba_enderecos_idfiscais import preencher_aba_enderecos_idfiscais
 from acoes.processar_endereco_faturamento import processar_endereco_faturamento
 from acoes.preencher_socios import preencher_aba_socios
 from uteis.gestor_sessao import encerrar_sessao
+from acoes.preencher_aba_geral2 import preencher_aba_geral2
 
 
 def principal():
@@ -28,7 +26,6 @@ def principal():
 
     try:
         # ETAPA 1: Verificações iniciais do ambiente.
-        # (Esta etapa agora chama 'iniciar_sessao()')
         print("⚙️   Executando verificações iniciais do ambiente...")
         executar_acao_assistida(executar_verificacoes_iniciais)
 
@@ -44,42 +41,32 @@ def principal():
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Execução de Pagamentos ---{RESET}")
         executar_acao_assistida(lambda: preencher_aba_exepgto(divisao_pn), nome_acao="Preencher Aba Execução de Pagamentos")
             
-        # ETAPA 5: (Comentada)
-        # ...
-
-        # ============================================================
-        # ETAPA 6: Preenchimento dos IDs Fiscais (O "GATILHO" do JSON)
-        # ============================================================
+        # ETAPA 5: Preenchimento dos IDs Fiscais (O "GATILHO" da Sessão JSON)
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Endereços - IDs Fiscais ---{RESET}")
-        # (Esta função agora escreve no JSON e não retorna nada)
         executar_acao_assistida(preencher_aba_enderecos_idfiscais)
 
-        # ============================================================
-        # ETAPA 7: Processamento de Endereço de Faturamento (Consumidor)
-        # ============================================================
+        # ETAPA 6: Processamento de Endereço de Faturamento
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Endereços - Faturamento ---{RESET}")
-        # (Esta chamada está desacoplada e correta)
         executar_acao_assistida(processar_endereco_faturamento)
         
-        # ============================================================
-        # ETAPA 8: Preenchimento dos Socios (Consumidor)
-        # ============================================================
+        # ETAPA 7: Preenchimento dos Socios
         print(f"\n{AMARELO}--- Iniciando Etapa: Aba Pessoas de Contato (Sócios) ---{RESET}")
-        # (Esta chamada está desacoplada e correta)
         executar_acao_assistida(preencher_aba_socios, nome_acao="Preencher Aba Pessoas de Contato (Sócios)")
 
+        # ETAPA 8: Preenchimento Geral 2
+        print(f"\n{AMARELO}--- Iniciando Etapa: Aba Pessoas de Contato (Sócios) ---{RESET}")
+        executar_acao_assistida(preencher_aba_geral2, nome_acao="Preencher Aba Geral 2")
+
+        # ETAPA 9: Finalização
         print(f"\n{AMARELO}🚀 Automação SAP B1 concluída com sucesso!{RESET}")
 
 
     except AutomacaoAbortadaPeloUsuario:
         # Se o usuário abortar em qualquer etapa, a execução é encerrada aqui.
         print(f"{VERMELHO}🚀 Automação encerrada pelo usuário.{RESET}")
-        # O 'finally' será chamado automaticamente após isto.
 
     except Exception as e:
-        # Captura qualquer outra falha crítica
         print(f"{VERMELHO}🚀 Automação FALHOU com erro crítico: {e}{RESET}")
-        # O 'finally' será chamado automaticamente após isto.
 
     finally:
         input('SESSÃO SERA ENCERRADA............................................')

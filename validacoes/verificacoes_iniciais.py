@@ -26,7 +26,7 @@ def executar_verificacoes_iniciais():
     try:
         # ETAPA 1: Sincroniza o JSON com a pasta de imagens.
         iniciar_sessao()
-        print(f"     {VERDE}✔ Sessão iniciada.{RESET}")
+        print(f"    {VERDE}✔ Sessão iniciada.{RESET}")
 
         # ETAPA 2: Sincroniza o JSON com a pasta de imagens.
         sincronizar_json_com_pasta_assets()
