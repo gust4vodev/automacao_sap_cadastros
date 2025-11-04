@@ -1,20 +1,19 @@
 {
-    "tipo_pessoa": 2,
-    "status_cnpj": "Ativa",
-    "razao_social": "61.087.390 EDER ANUNCIACAO PEREIRA",
-    "data_abertura": "2025-05-30",
+    "tipo_pessoa": 0,
+    "status_cnpj": "",
+    "razao_social": "",
+    "data_abertura": "",
     "inscricao_estadual": "Isento",
-    "simples_nacional": true,
+    "simples_nacional": null,
     "socios": [],
     "endereco": {
-        "tipo_logradouro": "Rua",
-        "logradouro": "Laura Franco",
-        "numero": "135",
+        "tipo_logradouro": "",
+        "logradouro": "",
+        "numero": "",
         "complemento": "",
-        "bairro": "Parque do Lageado",
-        "cep": "79075075",
-        "cidade": "Campo Grande",
-        "estado": "MS"
-    },
-    "documento_consultado": "61087390000173"
+        "bairro": "",
+        "cep": "",
+        "cidade": "",
+        "estado": ""
+    }
 }

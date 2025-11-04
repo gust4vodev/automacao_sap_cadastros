@@ -33,8 +33,9 @@ def preencher_aba_geral2():
     # ============================================================
     # 1. Navega para a aba correta
     # ============================================================
-    executar_acao_assistida(lambda: ir_para_aba("geral"), nome_acao="Navegar para a Aba Geral")
     time.sleep(1)
+    executar_acao_assistida(lambda: ir_para_aba("geral"), nome_acao="Navegar para a Aba Geral")
+    time.sleep(3)
 
 
     # ============================================================
