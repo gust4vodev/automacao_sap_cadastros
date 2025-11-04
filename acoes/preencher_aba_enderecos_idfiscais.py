@@ -72,7 +72,7 @@ def preencher_aba_enderecos_idfiscais():
             erro_msg = f"CNPJ {documento_copiado} não está com status 'Ativa'. Status encontrado: '{status_cnpj.title()}'."
             print(f"   {VERMELHO}❌ CNPJ IRREGULAR: {erro_msg}{RESET}")
             # Levanta um erro que o 'executor_acao_assistida' (no main.py) vai apanhar
-            raise ValueError(erro_msg)
+            raise AutomacaoAbortadaPeloUsuario(erro_msg)
         print(f"   {VERDE}✔ Status do CNPJ validado: Ativa.{RESET}")
     
 

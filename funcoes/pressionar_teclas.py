@@ -67,7 +67,8 @@ if __name__ == '__main__':
 
     try:
         print("--- Testando: pressionar_atalho_combinado('shift', 'tab')")
-        pressionar_atalho_combinado('shift', 'tab')
+        pressionar_atalho_combinado('shift', 'tab', 'tab')
+        pressionar_atalho_combinado('shift', 'tab', 'tab')
         time.sleep(1)
 
         #print("--- Testando: pressionar_tecla_unica('l')")

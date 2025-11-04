@@ -55,18 +55,23 @@ def preencher_aba_socios():
         try:
             print(f"     - Preenchendo sócio: {VERDE}{socio}{RESET}")
             
-            # --- Bloco do Clique ---
+            # --- Bloco do Clique - (DENIFIR NOVO)---
             try:
-                executar_acao_assistida(lambda: clicar_elemento("socios_campo_novo_1"), nome_acao=f"Clicar (tentativa 1) para '{socio}'")
+                clicar_elemento("pessoascontato_novosocio")
+                time.sleep(1)
             except Exception:
-                print(f"     {AMARELO}- Âncora 1 falhou. Tentando fallback 'socios_campo_novo_2'...{RESET}")
-                executar_acao_assistida(lambda: clicar_elemento("socios_campo_novo_2"), nome_acao=f"Clicar (tentativa 2) para '{socio}'")
+                clicar_elemento("pessoascontato_novosocio2")
+                time.sleep(1)
             
             # --- Passo 2: Colar ---
-            executar_acao_assistida(lambda: colar_texto(socio), nome_acao=f"Colar nome '{socio}'")
+            executar_acao_assistida(lambda: colar_texto('pessoascontato_idsocio', socio), nome_acao=f"Colar nome '{socio}'")
             time.sleep(1)
             
             # --- Passo 3: Shift+Tab ---
+            executar_acao_assistida(lambda: pressionar_atalho_combinado('shift', 'tab'), nome_acao="Sair do campo (Shift+Tab)")
+            time.sleep(1)
+
+             # --- Passo 4: Shift+Tab novamente---
             executar_acao_assistida(lambda: pressionar_atalho_combinado('shift', 'tab'), nome_acao="Sair do campo (Shift+Tab)")
             time.sleep(1)
             
@@ -76,7 +81,7 @@ def preencher_aba_socios():
         
         except Exception as e:
             print(f"   {VERMELHO}❌ Falha ao preencher o sócio '{socio}': {e}{RESET}")
-            time.sleep(2) # Pausa e continua o loop
+            time.sleep(1) # Pausa e continua o loop
 
 
 # --- Camada de Teste Direto
