@@ -55,15 +55,15 @@ Para que as diferentes etapas da automação comuniquem entre si, utilizámos um
     2.  **"Gatilho" (`idfiscais.py`):** Esta etapa captura o CPF/CNPJ da tela. Se for um CNPJ, ela chama a API.
     3.  **"Produtor" (`consulta_cnpj.py`):** Esta etapa (o "Gerente da API") **escreve** os dados (Sócios, IE, Endereço, etc.) no `dados_sessao.json`.
     4.  **"Consumidores" (`preencher_socios.py`):** As etapas seguintes (como "Preencher Sócios" ou "Preencher Geral 2") **leem** os dados de que precisam diretamente deste JSON.
-* **Vantagem:** O `main.py` (orquestrador) fica limpo. As "paredes" (ações) tornam-se independentes e auto-suficientes. Se o robô falhar, o ficheiro JSON fica guardado, permitindo uma depuração (debug) muito fácil.
+* **Vantagem:** O `main.py` (orquestrador) fica limpo. As "ações" (ações) tornam-se independentes e auto-suficientes. Se o robô falhar, o ficheiro JSON fica guardado, permitindo uma depuração (debug) muito fácil.
 
-### Estratégia 3: O "Motor" de Automação Assistida (Resiliência)
+### Estratégia 3: O "Assistente" de Automação Assistida (Resiliência)
 
 Esta é a estratégia mais importante para a robustez. O robô nunca executa uma ação "sensível" (como um clique ou uma chamada de API) diretamente.
 
-* **Como:** Todas as ações são "embrulhadas" pelo `assistente/executor.py` (o nosso "Motor").
-* **Lógica 1 (Retentativas):** O Motor tenta executar cada ação (ex: `clicar_elemento`) 3 vezes (com pausas) antes de desistir. Isto resolve 90% das falhas comuns de *timing* (ex: o SAP demorou a responder).
-* **Lógica 2 (Assistência):** Se as 3 tentativas falharem, o Motor **não pára o robô**. Em vez disso, ele abre um menu de interface para o utilizador, perguntando o que fazer ("Tentar Novamente", "Ignorar Etapa" ou "Abortar"). Isto é "Automação Assistida".
+* **Como:** Todas as ações são "embrulhadas" pelo `assistente/executor.py` (o nosso "Assistente").
+* **Lógica 1 (Retentativas):** O Assistente tenta executar cada ação (ex: `clicar_elemento`) 3 vezes (com pausas) antes de desistir. Isto resolve 90% das falhas comuns de *timing* (ex: o SAP demorou a responder).
+* **Lógica 2 (Assistência):** Se as 3 tentativas falharem, o Assistente **não pára o robô**. Em vez disso, ele abre um menu de interface para o utilizador, perguntando o que fazer ("Tentar Novamente", "Ignorar Etapa" ou "Abortar"). Isto é "Automação Assistida".
 
 ### Estratégia 4: Regras de Negócio Embutidas
 
@@ -79,9 +79,9 @@ Este é um mapa simples do projeto, focado nos "porquês" de cada pasta.
 
 automacao_sap_b1
 
--- acoes/             (As "Paredes": O que fazer? Etapas de negócio)
+-- acoes/             (As "Ações": O que fazer? Etapas de negócio)
 
--- assistente/        (O "Motor": A lógica de Retentativas e Menu de Falha)
+-- assistente/        (O "Assistente": A lógica de Retentativas e Menu de Falha)
 
 -- configuracoes/     (Carrega as chaves do ficheiro .env)
 
