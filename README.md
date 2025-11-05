@@ -1,4 +1,4 @@
-# Assistente de Automação SAP B1
+# Assistente de Automação SAP
 
 
 Este repositório contém o código-fonte de um assistente de automação (robô) focado no processo de **Cadastro de Parceiros de Negócios (PN)** no SAP B1.
